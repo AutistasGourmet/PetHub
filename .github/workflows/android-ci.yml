@@ -2,8 +2,6 @@ name: Android CI
 
 # 1. Configurar los disparadores (Triggers)
 on:
-  push:
-    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
