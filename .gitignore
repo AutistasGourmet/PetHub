@@ -13,3 +13,9 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# archivo real con llave
+google-services.json
+
+# no ignorar el ejemplo
+!google-services.json.example
