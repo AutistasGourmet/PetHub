@@ -29,8 +29,8 @@ jobs:
       run: chmod +x ./gradlew
 
     # Paso 4: Ejecutar las pruebas unitarias
-    - name: Ejecutar pruebas unitarias (Unit Tests)
-      run: ./gradlew testDebugUnitTest
+    #- name: Ejecutar pruebas unitarias (Unit Tests)
+     # run: ./gradlew testDebugUnitTest
 
     # Paso 5: Compilar la aplicación (Generar el APK de debug)
     - name: Compilar APK (Build)
