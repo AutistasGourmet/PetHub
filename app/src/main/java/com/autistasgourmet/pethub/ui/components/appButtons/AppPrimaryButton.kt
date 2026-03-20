@@ -1,4 +1,4 @@
-package com.autistasgourmet.pethub.ui.components
+package com.autistasgourmet.pethub.ui.components.appButtons
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -6,12 +6,15 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Login
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.autistasgourmet.pethub.ui.theme.PetHubTheme
 
 @Composable
-fun PrimaryButton(
+fun AppPrimaryButton(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -32,7 +35,7 @@ fun PrimaryButton(
     ) {
         Row(
             horizontalArrangement = Arrangement.Center,
-            verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically
         ) {
             if (icon != null) {
                 Icon(icon, contentDescription = null)
@@ -43,12 +46,12 @@ fun PrimaryButton(
     }
 }
 
-@androidx.compose.ui.tooling.preview.Preview(showBackground = true)
+@Preview(showBackground = true)
 @Composable
-fun PrimaryButtonLoginPreview() {
-    com.autistasgourmet.pethub.ui.theme.PetHubTheme {
+fun AppPrimaryButtonLoginPreview() {
+    PetHubTheme {
         Box(modifier = Modifier.padding(16.dp)) {
-            PrimaryButton(
+            AppPrimaryButton(
                 text = "Iniciar Sesión",
                 onClick = { /* accion del boton */ },
                 icon = Icons.AutoMirrored.Filled.Login

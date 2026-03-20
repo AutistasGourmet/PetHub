@@ -1,19 +1,10 @@
 package com.autistasgourmet.pethub.ui.features.login
 
-import androidx.collection.mutableObjectIntMapOf
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.AccessibleForward
-import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material.icons.automirrored.filled.Forward
-import androidx.compose.material.icons.automirrored.filled.ForwardToInbox
-import androidx.compose.material.icons.automirrored.filled.Login
-import androidx.compose.material.icons.automirrored.filled.PhoneForwarded
-import androidx.compose.material.icons.filled.AccountBox
-import androidx.compose.material.icons.filled.AppRegistration
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Login
@@ -26,13 +17,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.autistasgourmet.pethub.ui.components.AppLogo
 import com.autistasgourmet.pethub.ui.components.AppTextField
-import com.autistasgourmet.pethub.ui.components.PrimaryButton
+import com.autistasgourmet.pethub.ui.components.appButtons.AppPrimaryButton
 
 @Composable
 fun LoginScreen(
@@ -117,7 +107,7 @@ fun LoginScreen(
         if (isLoading) {
             CircularProgressIndicator()
         } else {
-            PrimaryButton(
+            AppPrimaryButton(
                 text = "Iniciar Sesión",
                 icon = Icons.Default.Login,
                 onClick = viewModel::login

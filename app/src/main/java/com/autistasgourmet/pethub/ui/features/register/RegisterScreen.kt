@@ -4,17 +4,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.AddToHomeScreen
-import androidx.compose.material.icons.automirrored.filled.Assignment
-import androidx.compose.material.icons.automirrored.filled.ContactSupport
-import androidx.compose.material.icons.automirrored.filled.ForwardToInbox
-import androidx.compose.material.icons.automirrored.filled.Login
-import androidx.compose.material.icons.automirrored.filled.NoteAdd
-import androidx.compose.material.icons.filled.AccountBox
-import androidx.compose.material.icons.filled.AppRegistration
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBackIosNew
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
@@ -25,13 +15,12 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.autistasgourmet.pethub.ui.components.AppTextField
-import com.autistasgourmet.pethub.ui.components.PrimaryButton
+import com.autistasgourmet.pethub.ui.components.appButtons.AppPrimaryButton
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -147,7 +136,7 @@ fun RegisterScreen(
             if (isLoading) {
                 CircularProgressIndicator()
             } else {
-                PrimaryButton(
+                AppPrimaryButton(
                     text = "Completar Registro",
                     icon = Icons.Default.PersonAdd,
                     onClick = viewModel::register
