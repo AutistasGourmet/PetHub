@@ -13,6 +13,7 @@ import androidx.navigation.compose.composable
 import com.autistasgourmet.pethub.ui.features.home.HomeScreen
 import com.autistasgourmet.pethub.ui.features.login.LoginScreen
 import com.autistasgourmet.pethub.ui.features.login.LoginViewModel
+import com.autistasgourmet.pethub.ui.features.publish.PublishScreen
 import com.autistasgourmet.pethub.ui.features.register.RegisterScreen
 import com.autistasgourmet.pethub.ui.features.register.RegisterViewModel
 
@@ -68,7 +69,8 @@ fun AppNavHost(
         }
 
         composable<MainRoute.Publish> {
-            Box { Text("Publicar") }
+            PublishScreen(
+            )
         }
 
         composable<MainRoute.Profile> {
