@@ -19,7 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-import com.autistasgourmet.pethub.ui.components.AppTextField
+import com.autistasgourmet.pethub.ui.components.appFields.AppTextField
 import com.autistasgourmet.pethub.ui.components.appButtons.AppPrimaryButton
 
 @OptIn(ExperimentalMaterial3Api::class)

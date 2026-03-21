@@ -21,7 +21,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.autistasgourmet.pethub.ui.components.AppLogo
-import com.autistasgourmet.pethub.ui.components.AppTextField
+import com.autistasgourmet.pethub.ui.components.appFields.AppTextField
 import com.autistasgourmet.pethub.ui.components.appButtons.AppPrimaryButton
 
 @Composable
