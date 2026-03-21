@@ -1,4 +1,4 @@
-package com.autistasgourmet.pethub.ui.components
+package com.autistasgourmet.pethub.ui.components.appFields
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -7,14 +7,22 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.autistasgourmet.pethub.ui.theme.PetHubTheme
 
 @Composable
 fun AppTextField(
@@ -31,7 +39,8 @@ fun AppTextField(
     isError: Boolean = false,
     errorMessage: String? = null,
     enabled: Boolean = true,
-    singleLine: Boolean = true
+    singleLine: Boolean = true,
+    minLines: Int = 1
 ) {
     // color del label cambia si hay error
     val labelColor = if (isError) MaterialTheme.colorScheme.error
@@ -85,10 +94,11 @@ fun AppTextField(
             isError = isError,
             enabled = enabled,
             singleLine = singleLine,
+            minLines = minLines,
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = MaterialTheme.colorScheme.primary,
                 unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
-                errorBorderColor = MaterialTheme.colorScheme.error, // Rojo en error
+                errorBorderColor = MaterialTheme.colorScheme.error,
                 errorLabelColor = MaterialTheme.colorScheme.error,
                 focusedContainerColor = MaterialTheme.colorScheme.surface,
                 unfocusedContainerColor = MaterialTheme.colorScheme.surface,
@@ -108,6 +118,29 @@ fun AppTextField(
                 modifier = Modifier
                     .padding(start = 8.dp, top = 4.dp)
                     .fillMaxWidth()
+            )
+        }
+    }
+}
+
+
+@Composable
+@Preview(showBackground = true)
+fun AppTextFieldPreview() {
+    PetHubTheme {
+        Column(
+            modifier = Modifier
+                .padding(20.dp)
+                .fillMaxWidth()
+        ) {
+            var name by remember { mutableStateOf("") }
+
+            AppTextField(
+                value = name,
+                onValueChange = { name = it },
+                label = "Nombre De Usuario",
+                placeholder = "Escribe tu usuario",
+                leadingIcon = Icons.Default.Person
             )
         }
     }

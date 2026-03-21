@@ -2,6 +2,7 @@ package com.autistasgourmet.pethub.ui.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
@@ -16,6 +17,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.autistasgourmet.pethub.ui.components.appButtons.AppPrimaryButton
+import com.autistasgourmet.pethub.ui.components.appFields.AppTextField
 import com.autistasgourmet.pethub.ui.theme.PetHubTheme
 
 @Composable
@@ -26,11 +28,12 @@ fun AppSectionText(
     content: @Composable () -> Unit,
 ) {
     Card(
-        modifier = modifier,
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        modifier = modifier.fillMaxWidth(),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
     ) {
         Column(
-            modifier = modifier
+            modifier = Modifier
                 .padding(20.dp)
         ) {
             Text(
