@@ -43,13 +43,18 @@ fun AppBottomBar(
 ) {
     val items = listOf(
         BottomNavItem(MainRoute.Home, Icons.Default.Home, Icons.Outlined.Home, "Inicio"),
-        BottomNavItem(MainRoute.Adopt, Icons.Default.Favorite, Icons.Outlined.FavoriteBorder, "Adoptar"),
+        BottomNavItem(
+            MainRoute.Adopt,
+            Icons.Default.Favorite,
+            Icons.Outlined.FavoriteBorder,
+            "Adoptar"
+        ),
         BottomNavItem(MainRoute.Publish, Icons.Default.AddBox, Icons.Outlined.AddBox, "Publicar"),
         BottomNavItem(MainRoute.Profile, Icons.Default.Person, Icons.Outlined.Person, "Perfil")
     )
 
     NavigationBar(
-        containerColor = MaterialTheme.colorScheme.surface,
+        containerColor = MaterialTheme.colorScheme.surfaceContainer,
         tonalElevation = 0.dp
     ) {
         items.forEach { item ->
@@ -64,11 +69,12 @@ fun AppBottomBar(
                         contentDescription = item.label
                     )
                 },
-                label = { Text(item.label) },
+                label = { Text(item.label, style = MaterialTheme.typography.labelSmall) },
                 colors = NavigationBarItemDefaults.colors(
-                    selectedIconColor = MaterialTheme.colorScheme.primary,
-                    selectedTextColor = MaterialTheme.colorScheme.primary,
-                    indicatorColor = MaterialTheme.colorScheme.primaryContainer
+                    selectedIconColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                    indicatorColor = MaterialTheme.colorScheme.primaryContainer,
+                    unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    selectedTextColor = MaterialTheme.colorScheme.primary
                 )
             )
         }
@@ -95,7 +101,7 @@ fun AppTopBar(
                     Text(
                         text = subtitle,
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = MaterialTheme.colorScheme.primary
                     )
                 }
             }
@@ -103,7 +109,8 @@ fun AppTopBar(
         navigationIcon = navigationIcon,
         actions = actions,
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-            containerColor = MaterialTheme.colorScheme.surface
+            containerColor = MaterialTheme.colorScheme.surfaceContainer,
+            scrolledContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh
         )
     )
 }
