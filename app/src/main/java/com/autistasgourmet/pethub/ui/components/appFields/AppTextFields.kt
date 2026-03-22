@@ -123,7 +123,6 @@ fun AppTextField(
     }
 }
 
-
 @Composable
 @Preview(showBackground = true)
 fun AppTextFieldPreview() {

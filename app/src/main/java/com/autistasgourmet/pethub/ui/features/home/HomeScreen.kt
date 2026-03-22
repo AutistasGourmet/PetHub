@@ -16,14 +16,21 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Login
 import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.outlined.AddBox
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -31,6 +38,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.autistasgourmet.pethub.ui.components.AppCheckBox
+import com.autistasgourmet.pethub.ui.components.AppDropdown
+import com.autistasgourmet.pethub.ui.components.AppSectionText
+import com.autistasgourmet.pethub.ui.components.appButtons.AppPrimaryButton
+import com.autistasgourmet.pethub.ui.components.appChips.AppChoiceChips
+import com.autistasgourmet.pethub.ui.components.appChips.AppFilterChips
+import com.autistasgourmet.pethub.ui.components.appFields.AppNumberField
+import com.autistasgourmet.pethub.ui.components.appFields.AppTextArea
+import com.autistasgourmet.pethub.ui.components.appFields.AppTextField
 
 @Composable
 fun HomeScreen(
@@ -41,21 +57,22 @@ fun HomeScreen(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .padding(16.dp)
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        // despues incluir encabezados de cada pagina
-        Text(
-            text = "Bienvenido, Animal Lover",
-            style = MaterialTheme.typography.headlineMedium,
-            fontWeight = FontWeight.Bold
-        )
-        Text(
-            text = "¿Qué te gustaría hacer hoy?",
-            style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Column {
+            Text(
+                text = "Bienvenido, Animal Lover",
+                style = MaterialTheme.typography.headlineMedium,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                text = "¿Qué te gustaría hacer hoy?",
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
 
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -78,6 +95,109 @@ fun HomeScreen(
                 iconColor = Color.Blue,
                 modifier = Modifier.weight(1f),
                 onClick = onNavigateToPublish
+            )
+        }
+
+        // los componentes
+        AppSectionText(title = "Boton") {
+            AppPrimaryButton(
+                text = "Iniciar Sesión",
+                onClick = { /* acción */ },
+                icon = Icons.AutoMirrored.Filled.Login
+            )
+        }
+
+        var selectedEnergy by remember { mutableStateOf("Medio") }
+        val traitOptions = listOf(
+            "Juguetón", "Tímido", "Independiente", "Guardián",
+            "Faldero", "Cariñoso", "Tranquilo", "Activo"
+        )
+        var selectedFilters by remember { mutableStateOf(listOf("Timido")) }
+        AppSectionText(title = "Selección (Chips)") {
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                AppChoiceChips(
+                    label = "Nivel de Energía",
+                    options = listOf("Bajo", "Medio", "Alto"),
+                    selectedOption = selectedEnergy,
+                    onOptionSelected = { selectedEnergy = it }
+                )
+
+                AppFilterChips(
+                    label = "Rasgos de su personalidad",
+                    options = traitOptions,
+                    selectedOptions = selectedFilters,
+                    onOptionToggled = { option ->
+                        selectedFilters = if (selectedFilters.contains(option)) {
+                            selectedFilters - option
+                        } else {
+                            selectedFilters + option
+                        }
+                    }
+                )
+            }
+        }
+
+        var userName by remember { mutableStateOf("") }
+        var age by remember { mutableStateOf("") }
+        var userDescription by remember {
+            mutableStateOf(
+                "Trabajo desde casa 3 días a la semana, " +
+                        "por lo que tengo tiempo para dedicar a una " +
+                        "mascota. Me gusta dar paseos largos."
+            )
+        }
+        AppSectionText(title = "Campos de Entrada") {
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                AppTextField(
+                    value = userName,
+                    onValueChange = { userName = it },
+                    label = "Nombre De Usuario",
+                    placeholder = "Escribe tu usuario",
+                    leadingIcon = Icons.Default.Person
+                )
+
+                AppNumberField(
+                    modifier = Modifier.fillMaxWidth(0.4f),
+                    value = age,
+                    onValueChange = { age = it },
+                    label = "Edad",
+                    placeholder = "tu edad",
+                )
+
+                AppTextArea(
+                    value = userDescription,
+                    onValueChange = { userDescription = it },
+                    label = "Detalles sobre el espacio y rutina",
+                    placeholder = "Escribe tus detalles"
+                )
+            }
+        }
+
+        var isCheckedVac by remember { mutableStateOf(false) }
+        var isCheckedEst by remember { mutableStateOf(false) }
+        AppSectionText(title = "Validaciones (Checkboxes)") {
+            Column {
+                AppCheckBox(
+                    label = "Vacunado",
+                    checked = isCheckedVac,
+                    onCheckedChange = { isCheckedVac = it }
+                )
+                HorizontalDivider(modifier = Modifier.padding(vertical = 10.dp))
+                AppCheckBox(
+                    label = "Esterilizado / Castrado",
+                    checked = isCheckedEst,
+                    onCheckedChange = { isCheckedEst = it }
+                )
+            }
+        }
+
+        var selectedSpecies by remember { mutableStateOf("Perro") }
+        AppSectionText(title = "Selectores (Dropdown)") {
+            AppDropdown(
+                label = "Especie",
+                options = listOf("Perro", "Gato", "Otro"),
+                selectedOption = selectedSpecies,
+                onOptionSelected = { selectedSpecies = it }
             )
         }
     }
