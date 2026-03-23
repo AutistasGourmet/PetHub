@@ -60,6 +60,7 @@ dependencies {
     
     // Hilt
     implementation(libs.hilt.android)
+    implementation(libs.firebase.storage)
     ksp(libs.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
     
@@ -67,6 +68,9 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
     implementation(libs.firebase.firestore)
+
+    // Storage
+//    implementation(libs.aws.android.sdk.s3)
 
     // Testing
     testImplementation(libs.junit)
@@ -76,4 +80,7 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
+
+    // json
+    implementation(libs.gson)
 }

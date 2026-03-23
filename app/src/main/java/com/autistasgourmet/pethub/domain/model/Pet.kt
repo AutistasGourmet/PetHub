@@ -1,10 +1,28 @@
 package com.autistasgourmet.pethub.domain.model
 
 data class Pet(
-    val id: String,
+    val id: String = "",
+    val ownerEmail: String,
     val name: String,
-    val breed: String,
-    val age: Int,
+    val species: PetSpecies,
+    val ageRange: PetAgeRange,
+    val size: PetSize,
+    val gender: PetGender,
+    val energyLevel: EnergyLevel,
+    val sociabilityKids: SociabilityLevel,
+    val sociabilityDogs: SociabilityLevel,
+    val sociabilityCats: SociabilityLevel,
+    val affectionTraits: List<String>,
+    val energyTraits: List<String>,
+    val intelligenceTraits: List<String>,
+    val instinctTraits: List<String>,
+    val photos: List<String>,
     val description: String,
-    val imageUrl: String
+    val isVaccinated: Boolean,
+    val isSterilized: Boolean,
+    val isDewormed: Boolean,
+    val specialConditions: String,
+    val postalCode: String,
+    val state: String,
+    val city: String
 )
