@@ -9,11 +9,14 @@ import com.autistasgourmet.pethub.domain.repository.AdopterProfileRepository
 import com.autistasgourmet.pethub.domain.repository.AuthRepository
 import com.autistasgourmet.pethub.domain.repository.PetRepository
 import com.autistasgourmet.pethub.domain.repository.PostalCodeRepository
+import com.autistasgourmet.pethub.domain.usecase.CompleteAdopterProfileUseCase
+import com.autistasgourmet.pethub.domain.usecase.GetAdoptablePetsUseCase
+import com.autistasgourmet.pethub.domain.usecase.GetPetDetailUseCase
 import com.autistasgourmet.pethub.domain.usecase.LoginUseCase
 import com.autistasgourmet.pethub.domain.usecase.RegisterUseCase
+import com.autistasgourmet.pethub.domain.usecase.SavePetUseCase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.FirebaseStorage
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -55,6 +58,12 @@ object AppModule {
         return AdopterProfileRepositoryImpl(firestore)
     }
 
+    @Provides
+    @Singleton
+    fun providePostalCodeRepository(@ApplicationContext context: Context): PostalCodeRepository {
+        return PostalCodeRepositoryImpl(context)
+    }
+
     // Use Cases --------------------------------------------------------
 
     @Provides
@@ -69,10 +78,33 @@ object AppModule {
         return RegisterUseCase(repository)
     }
 
-    // utils --------------------------------------------------------
     @Provides
     @Singleton
-    fun providePostalCodeRepository(@ApplicationContext context: Context): PostalCodeRepository {
-        return PostalCodeRepositoryImpl(context)
+    fun provideSavePetUseCase(
+        repository: PetRepository,
+        postalCodeRepository: PostalCodeRepository
+    ): SavePetUseCase {
+        return SavePetUseCase(repository, postalCodeRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideCompleteAdopterProfileUseCase(
+        repository: AdopterProfileRepository,
+        postalCodeRepository: PostalCodeRepository
+    ): CompleteAdopterProfileUseCase {
+        return CompleteAdopterProfileUseCase(repository, postalCodeRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetAdoptablePetsUseCase(repository: PetRepository): GetAdoptablePetsUseCase {
+        return GetAdoptablePetsUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetPetDetailUseCase(repository: PetRepository): GetPetDetailUseCase {
+        return GetPetDetailUseCase(repository)
     }
 }

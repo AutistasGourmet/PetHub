@@ -3,16 +3,8 @@ package com.autistasgourmet.pethub.data.mapper
 import com.autistasgourmet.pethub.data.remote.dto.AdopterProfileDto
 import com.autistasgourmet.pethub.data.remote.dto.PetDto
 import com.autistasgourmet.pethub.data.remote.dto.UserDto
-import com.autistasgourmet.pethub.domain.model.AdopterExperience
 import com.autistasgourmet.pethub.domain.model.AdopterProfile
-import com.autistasgourmet.pethub.domain.model.EnergyLevel
-import com.autistasgourmet.pethub.domain.model.HousingType
 import com.autistasgourmet.pethub.domain.model.Pet
-import com.autistasgourmet.pethub.domain.model.PetAgeRange
-import com.autistasgourmet.pethub.domain.model.PetGender
-import com.autistasgourmet.pethub.domain.model.PetSize
-import com.autistasgourmet.pethub.domain.model.PetSpecies
-import com.autistasgourmet.pethub.domain.model.SociabilityLevel
 import com.autistasgourmet.pethub.domain.model.User
 
 // User ------------------------------------------------------------------
@@ -55,7 +47,6 @@ fun PetDto.toDomain(): Pet = Pet(
     isDewormed = isDewormed,
     specialConditions = specialConditions,
     postalCode = postalCode,
-    state = state,
     city = city
 )
 
@@ -82,7 +73,6 @@ fun Pet.toDto(): PetDto = PetDto(
     isDewormed = isDewormed,
     specialConditions = specialConditions,
     postalCode = postalCode,
-    state = state,
     city = city
 )
 
@@ -96,7 +86,6 @@ fun AdopterProfileDto.toDomain(): AdopterProfile = AdopterProfile(
     age = age,
     occupation = occupation,
     postalCode = postalCode,
-    state = state,
     city = city,
     housingType = enumValueOf(housingType),
     hasPatio = hasPatio,
@@ -120,7 +109,6 @@ fun AdopterProfile.toDto(): AdopterProfileDto = AdopterProfileDto(
     age = age,
     occupation = occupation,
     postalCode = postalCode,
-    state = state,
     city = city,
     housingType = housingType.name,
     hasPatio = hasPatio,

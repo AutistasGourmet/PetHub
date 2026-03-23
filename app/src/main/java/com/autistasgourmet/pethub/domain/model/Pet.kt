@@ -23,6 +23,5 @@ data class Pet(
     val isDewormed: Boolean,
     val specialConditions: String,
     val postalCode: String,
-    val state: String,
     val city: String
 )

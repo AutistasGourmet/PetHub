@@ -23,6 +23,5 @@ data class PetDto(
     val isDewormed: Boolean = false,
     val specialConditions: String = "",
     val postalCode: String = "",
-    val state: String = "",
     val city: String = ""
 )

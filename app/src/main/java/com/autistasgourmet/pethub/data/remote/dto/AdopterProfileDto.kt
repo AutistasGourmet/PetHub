@@ -7,7 +7,6 @@ data class AdopterProfileDto(
     val age: Int = 0,
     val occupation: String = "",
     val postalCode: String = "",
-    val state: String = "",
     val city: String = "",
     val housingType: String = "",
     val hasPatio: Boolean = false,

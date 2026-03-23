@@ -1,21 +1,24 @@
 package com.autistasgourmet.pethub.ui.navigation
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.toRoute
+import com.autistasgourmet.pethub.ui.features.adopt.AdoptPetScreen
+import com.autistasgourmet.pethub.ui.features.adopt.PetDetailScreen
+import com.autistasgourmet.pethub.ui.features.completeProfile.CompleteAdopterProfileScreen
 import com.autistasgourmet.pethub.ui.features.home.HomeScreen
 import com.autistasgourmet.pethub.ui.features.login.LoginScreen
 import com.autistasgourmet.pethub.ui.features.login.LoginViewModel
-import com.autistasgourmet.pethub.ui.features.publish.PublishScreen
+import com.autistasgourmet.pethub.ui.features.profile.ProfileScreen
 import com.autistasgourmet.pethub.ui.features.register.RegisterScreen
 import com.autistasgourmet.pethub.ui.features.register.RegisterViewModel
+import com.autistasgourmet.pethub.ui.features.registerPet.RegisterPetScreen
 
 @Composable
 fun AppNavHost(
@@ -30,9 +33,9 @@ fun AppNavHost(
         composable<Route.Login> {
             val viewModel: LoginViewModel = hiltViewModel()
             // comentar para probar el login
-            navController.navigate(MainRoute.Home) {
+            /*navController.navigate(MainRoute.Home) {
                 popUpTo(Route.Login) { inclusive = true }
-            }
+            }*/
             LoginScreen(
                 viewModel = viewModel,
                 onLoginSuccess = {
@@ -65,16 +68,39 @@ fun AppNavHost(
         }
 
         composable<MainRoute.Adopt> {
-            Box { Text("Adoptar") }
+            AdoptPetScreen(
+                onNavigateToDetail = { petId ->
+                    navController.navigate(MainRoute.PetDetail(petId))
+                }
+            )
+        }
+
+        composable<MainRoute.PetDetail> { backStackEntry ->
+            val detail: MainRoute.PetDetail = backStackEntry.toRoute()
+            PetDetailScreen(
+                petId = detail.petId,
+                onBack = { navController.popBackStack() }
+            )
         }
 
         composable<MainRoute.Publish> {
-            PublishScreen(
+            RegisterPetScreen(
+                onBack = { navController.popBackStack() }
             )
         }
 
         composable<MainRoute.Profile> {
-            Box { Text("Perfil") }
+            ProfileScreen(
+                onNavigateToCompleteProfile = {
+                    navController.navigate(MainRoute.CompleteAdopterProfile)
+                }
+            )
+        }
+
+        composable<MainRoute.CompleteAdopterProfile> {
+            CompleteAdopterProfileScreen(
+                onBack = { navController.popBackStack() }
+            )
         }
     }
 }
