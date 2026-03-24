@@ -10,6 +10,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Login
+import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
@@ -27,6 +30,7 @@ import com.autistasgourmet.pethub.domain.model.AdopterExperience
 import com.autistasgourmet.pethub.domain.model.HousingType
 import com.autistasgourmet.pethub.ui.components.AppCheckBox
 import com.autistasgourmet.pethub.ui.components.AppDropdown
+import com.autistasgourmet.pethub.ui.components.AppHighlightedText
 import com.autistasgourmet.pethub.ui.components.AppSectionText
 import com.autistasgourmet.pethub.ui.components.appButtons.AppPrimaryButton
 import com.autistasgourmet.pethub.ui.components.appFields.AppNumberField
@@ -78,6 +82,7 @@ fun CompleteAdopterProfileScreen(
             .verticalScroll(rememberScrollState())
             .padding(16.dp)
     ) {
+        //primera sección
         PetHubTheme {
             Column(
                 modifier = Modifier.padding(16.dp)
@@ -134,6 +139,7 @@ fun CompleteAdopterProfileScreen(
             }
         }
 
+        //segunda sección
         PetHubTheme {
             Column(
                 modifier = Modifier.padding(16.dp)
@@ -213,6 +219,7 @@ fun CompleteAdopterProfileScreen(
             }
         }
 
+        //Tercera sección
         PetHubTheme{
             Column(
                 modifier = Modifier.padding(16.dp)
@@ -238,13 +245,46 @@ fun CompleteAdopterProfileScreen(
                             onCheckedChange = viewModel::onDewormingChange
                         )
                         HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
-                    }
+                    },
+                    textColor = MaterialTheme.colorScheme.primary
                 )
             }
         }
-        
-        Button(onClick = onBack) {
-            Text("Regresar")
+
+        //cuarta sección
+        PetHubTheme{
+            Column(
+                modifier = Modifier.padding(16.dp)
+            ) {
+                AppSectionText(
+                    title = "Ubicación",
+                    content = {
+                        Spacer(modifier = Modifier.height(16.dp))
+                        AppHighlightedText(
+                            normalText = "¿Dónde te encuentras? Ingresa el ",
+                            highlightedText = "Código Postal."
+                        )
+                        AppNumberField(
+                            value = postalCode,
+                            onValueChange = viewModel::onPostalCodeChange,
+                            label = "Código Postal",
+                            placeholder = "Ej. 98064",
+                            isError = postalCodeError != null,
+                            errorMessage = postalCodeError
+                        )
+                    },
+                    textColor = MaterialTheme.colorScheme.primary
+
+                )
+            }
         }
+
+        //botón para guardar los datos del formulario
+        AppPrimaryButton(
+            modifier = Modifier.padding(16.dp),
+            text = "Guardar Cambios",
+            onClick = viewModel::saveProfile,
+            icon = Icons.AutoMirrored.Filled.Send
+        )
     }
 }
