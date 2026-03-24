@@ -12,6 +12,7 @@ import androidx.navigation.toRoute
 import com.autistasgourmet.pethub.ui.features.adopt.AdoptPetScreen
 import com.autistasgourmet.pethub.ui.features.adopt.PetDetailScreen
 import com.autistasgourmet.pethub.ui.features.completeProfile.CompleteAdopterProfileScreen
+import com.autistasgourmet.pethub.ui.features.completeProfile.CompleteAdopterProfileViewModel
 import com.autistasgourmet.pethub.ui.features.home.HomeScreen
 import com.autistasgourmet.pethub.ui.features.login.LoginScreen
 import com.autistasgourmet.pethub.ui.features.login.LoginViewModel
@@ -33,9 +34,9 @@ fun AppNavHost(
         composable<Route.Login> {
             val viewModel: LoginViewModel = hiltViewModel()
             // comentar para probar el login
-            /*navController.navigate(MainRoute.Home) {
+            navController.navigate(MainRoute.Home) {
                 popUpTo(Route.Login) { inclusive = true }
-            }*/
+            }
             LoginScreen(
                 viewModel = viewModel,
                 onLoginSuccess = {
@@ -98,8 +99,10 @@ fun AppNavHost(
         }
 
         composable<MainRoute.CompleteAdopterProfile> {
+            val viewModel: CompleteAdopterProfileViewModel = hiltViewModel()
             CompleteAdopterProfileScreen(
-                onBack = { navController.popBackStack() }
+                onBack = { navController.popBackStack() },
+                viewModel = viewModel
             )
         }
     }

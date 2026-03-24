@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,9 +22,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.autistasgourmet.pethub.domain.model.AdopterExperience
+import com.autistasgourmet.pethub.domain.model.HousingType
+import com.autistasgourmet.pethub.ui.components.AppCheckBox
+import com.autistasgourmet.pethub.ui.components.AppDropdown
 import com.autistasgourmet.pethub.ui.components.AppSectionText
 import com.autistasgourmet.pethub.ui.components.appButtons.AppPrimaryButton
 import com.autistasgourmet.pethub.ui.components.appFields.AppNumberField
+import com.autistasgourmet.pethub.ui.components.appFields.AppTextArea
 import com.autistasgourmet.pethub.ui.components.appFields.AppTextField
 import com.autistasgourmet.pethub.ui.theme.PetHubTheme
 
@@ -135,40 +142,72 @@ fun CompleteAdopterProfileScreen(
                     title = "Cuestionario de adoptante",
                     content = {
                         Spacer(modifier = Modifier.height(16.dp))
-                        AppTextField(
-                            value = "ingresa tu nombre",
-                            onValueChange = {},
-                            label = "Tipo de vivienda"
+                        var selectedHouseType by remember { mutableStateOf(HousingType.APARTAMENTO) }
+                        AppDropdown(
+                            label = "Tipo de vivienda",
+                            options = HousingType.entries.map { it.displayName },
+                            selectedOption = selectedHouseType.displayName,
+                            onOptionSelected = { selectedString ->
+                                selectedHouseType = HousingType.entries.first { it.displayName == selectedString }
+                            }
                         )
-                        AppTextField(
-                            value = "ingresa tus apellidos",
-                            onValueChange = {},
-                            label = "Apellidos"
-                        )
-                        Spacer(modifier = Modifier.height(16.dp))
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            //horizontalArrangement = Arrangement.spacedBy(16.dp)
-                        ) {
-                            AppTextField(
-                                modifier = Modifier.fillMaxWidth(0.5f),
-                                value = "tu ocupación",
-                                onValueChange = {},
-                                label = "Ocupación"
-                            )
-                            Spacer(modifier = Modifier.padding(15.dp))
-                            var age by remember { mutableStateOf("") }
+                        HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
 
-                            AppNumberField(
-                                //modifier = Modifier.fillMaxWidth(0.3f),
-                                value = age,
-                                onValueChange = { age = it },
-                                label = "Edad",
-                                placeholder = "tu edad"
-                            )
-                        }
+                        AppCheckBox(
+                            label = "La vivienda cuenta con patio, terraza o jardin seguro",
+                            checked = hasPatio, //desde el viewmodel viene en FALSE
+                            onCheckedChange = viewModel::onHasPatioChange,
+                        )
+
+                        HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+
+                        var selectedAdoptExperience by remember { mutableStateOf(AdopterExperience.PRIMERA_VEZ) }
+                        AppDropdown(
+                            label = "Experiencia con mascotas",
+                            options = AdopterExperience.entries.map { it.displayName },
+                            selectedOption = selectedAdoptExperience.displayName,
+                            onOptionSelected = { selectedString ->
+                                selectedAdoptExperience = AdopterExperience.entries.first { it.displayName == selectedString }
+                            }
+                        )
+
                         Spacer(modifier = Modifier.height(16.dp))
-                        //AppPrimaryButton(text = "algun boton", onClick = {})
+                        Text(
+                            text = "Actualmente tienes en casa:",
+                            style = MaterialTheme.typography.bodyLarge,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+
+                        HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+                        AppCheckBox(
+                            label = "PERROS",
+                            checked = hasDogs, //desde el viewmodel viene en FALSE
+                            onCheckedChange = viewModel::onHasDogsChange,
+                        )
+
+                        HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+                        AppCheckBox(
+                            label = "GATOS",
+                            checked = hasCats, //desde el viewmodel viene en FALSE
+                            onCheckedChange = viewModel::onHasCatsChange,
+                        )
+
+                        HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+                        AppCheckBox(
+                            label = "NIÑOS",
+                            checked = hasKids, //desde el viewmodel viene en FALSE
+                            onCheckedChange = viewModel::onHasKidsChange,
+                        )
+                        HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+
+                        AppTextArea(
+                            value = spaceRoutineDetails,
+                            onValueChange = viewModel::onSpaceRoutineDetailsChange,
+                            label = "Detalles sobre espacio y rutina",
+                            placeholder = "Describe los espacios que puedes brindar y tu rutina diaria"
+                        )
+
                     },
                     textColor = MaterialTheme.colorScheme.primary
                 )
