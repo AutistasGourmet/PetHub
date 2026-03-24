@@ -40,7 +40,7 @@ fun AppCheckBox(
             onCheckedChange = onCheckedChange
         )
         Text(
-            text = label.uppercase(),
+            text = label,
             style = MaterialTheme.typography.labelLarge,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
