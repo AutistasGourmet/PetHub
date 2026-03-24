@@ -80,35 +80,43 @@ fun CompleteAdopterProfileScreen(
                     content = {
                         Spacer(modifier = Modifier.height(16.dp))
                         AppTextField(
-                            value = "ingresa tu nombre",
-                            onValueChange = {},
-                            label = "Nombre"
+                            value = name,
+                            onValueChange = viewModel::onNameChange,
+                            label = "Nombre",
+                            placeholder = "ingresa tu nombre",
+                            isError = nameError != null,
+                            errorMessage = nameError
                         )
                         AppTextField(
-                            value = "ingresa tus apellidos",
-                            onValueChange = {},
-                            label = "Apellidos"
+                            value = lastName,
+                            onValueChange = viewModel::onLastNameChange,
+                            label = "Apellidos",
+                            placeholder = "ingresa tus apellidos",
+                            isError = lastNameError != null,
+                            errorMessage = lastNameError
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                         Row(
                             modifier = Modifier.fillMaxWidth(),
-                            //horizontalArrangement = Arrangement.spacedBy(16.dp)
                         ) {
                             AppTextField(
                                 modifier = Modifier.fillMaxWidth(0.5f),
-                                value = "tu ocupación",
-                                onValueChange = {},
-                                label = "Ocupación"
+                                value = occupation,
+                                onValueChange = viewModel::onOccupationChange,
+                                label = "Ocupación",
+                                placeholder = "tu ocupación",
+                                isError = occupationError != null,
+                                errorMessage = occupationError
                             )
                             Spacer(modifier = Modifier.padding(15.dp))
-                            var age by remember { mutableStateOf("") }
 
                             AppNumberField(
-                                //modifier = Modifier.fillMaxWidth(0.3f),
                                 value = age,
-                                onValueChange = { age = it },
+                                onValueChange = viewModel::onAgeChange,
                                 label = "Edad",
-                                placeholder = "tu edad"
+                                placeholder = "tu edad",
+                                isError = ageError != null,
+                                errorMessage = ageError
                             )
                         }
                         Spacer(modifier = Modifier.height(16.dp))
