@@ -207,23 +207,41 @@ fun CompleteAdopterProfileScreen(
                             label = "Detalles sobre espacio y rutina",
                             placeholder = "Describe los espacios que puedes brindar y tu rutina diaria"
                         )
-
                     },
                     textColor = MaterialTheme.colorScheme.primary
                 )
             }
         }
 
-//        Text(
-//            text = "Completar Perfil de Adoptante",
-//            style = MaterialTheme.typography.headlineSmall,
-//            fontWeight = FontWeight.Bold
-//        )
-//        Spacer(modifier = Modifier.height(24.dp))
-//
-//        Text("Aquí irá el formulario de perfil...")
-//
-//        Spacer(modifier = Modifier.height(24.dp))
+        PetHubTheme{
+            Column(
+                modifier = Modifier.padding(16.dp)
+            ) {
+                AppSectionText(
+                    title = "Cuidados que estás dispuesto a dar:",
+                    content = {
+                        AppCheckBox(
+                            label = "Visitas al Veterinario",
+                            checked = vetVisits,//desde el viewmodel viene en FALSE
+                            onCheckedChange = viewModel::onVetVisitsChange
+                        )
+                        HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+                        AppCheckBox(
+                            label = "Vacunación",
+                            checked = vaccination,//desde el viewmodel viene en FALSE
+                            onCheckedChange = viewModel::onVaccinationChange
+                        )
+                        HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+                        AppCheckBox(
+                            label = "Desparacitación",
+                            checked = deworming,//desde el viewmodel viene en FALSE
+                            onCheckedChange = viewModel::onDewormingChange
+                        )
+                        HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+                    }
+                )
+            }
+        }
         
         Button(onClick = onBack) {
             Text("Regresar")
