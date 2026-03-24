@@ -29,8 +29,42 @@ import com.autistasgourmet.pethub.ui.theme.PetHubTheme
 
 @Composable
 fun CompleteAdopterProfileScreen(
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    viewModel: CompleteAdopterProfileViewModel
 ) {
+    //field states
+    val name = viewModel.name
+    val lastName = viewModel.lastName
+    val age = viewModel.age
+    val occupation = viewModel.occupation
+    val postalCode = viewModel.postalCode
+    val housingType = viewModel.housingType
+    val hasPatio = viewModel.hasPatio
+    val spaceRoutineDetails = viewModel.spaceRoutineDetails
+    val petExperience = viewModel.petExperience
+    val hasDogs = viewModel.hasDogs
+    val hasCats = viewModel.hasCats
+    val hasKids = viewModel.hasKids
+
+    //care details compromises
+    val vetVisits = viewModel.vetVisits
+    val vaccination = viewModel.vaccination
+    val deworming = viewModel.deworming
+    val properHygiene = viewModel.properHygiene
+    val cleanWater = viewModel.cleanWater
+    val kibbleFeeding = viewModel.kibbleFeeding
+
+    //ui states
+    val isLoading = viewModel.isLoading
+    val nameError = viewModel.nameError
+    val lastNameError = viewModel.lastNameError
+    val ageError = viewModel.ageError
+    val occupationError = viewModel.occupationError
+    val postalCodeError = viewModel.postalCodeError
+    val spaceDetailsError = viewModel.spaceDetailsError
+
+
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -49,6 +83,54 @@ fun CompleteAdopterProfileScreen(
                             value = "ingresa tu nombre",
                             onValueChange = {},
                             label = "Nombre"
+                        )
+                        AppTextField(
+                            value = "ingresa tus apellidos",
+                            onValueChange = {},
+                            label = "Apellidos"
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            //horizontalArrangement = Arrangement.spacedBy(16.dp)
+                        ) {
+                            AppTextField(
+                                modifier = Modifier.fillMaxWidth(0.5f),
+                                value = "tu ocupación",
+                                onValueChange = {},
+                                label = "Ocupación"
+                            )
+                            Spacer(modifier = Modifier.padding(15.dp))
+                            var age by remember { mutableStateOf("") }
+
+                            AppNumberField(
+                                //modifier = Modifier.fillMaxWidth(0.3f),
+                                value = age,
+                                onValueChange = { age = it },
+                                label = "Edad",
+                                placeholder = "tu edad"
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(16.dp))
+                        //AppPrimaryButton(text = "algun boton", onClick = {})
+                    },
+                    textColor = MaterialTheme.colorScheme.primary
+                )
+            }
+        }
+
+        PetHubTheme {
+            Column(
+                modifier = Modifier.padding(16.dp)
+            ) {
+                AppSectionText(
+                    title = "Cuestionario de adoptante",
+                    content = {
+                        Spacer(modifier = Modifier.height(16.dp))
+                        AppTextField(
+                            value = "ingresa tu nombre",
+                            onValueChange = {},
+                            label = "Tipo de vivienda"
                         )
                         AppTextField(
                             value = "ingresa tus apellidos",
