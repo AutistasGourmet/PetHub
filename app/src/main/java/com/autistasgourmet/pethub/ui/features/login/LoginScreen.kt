@@ -1,6 +1,5 @@
 package com.autistasgourmet.pethub.ui.features.login
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -18,11 +17,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
-import com.autistasgourmet.pethub.ui.components.AppLogo
+import com.autistasgourmet.pethub.ui.components.commons.AppLogo
+import com.autistasgourmet.pethub.ui.components.appButtons.AppClickableText
 import com.autistasgourmet.pethub.ui.components.appFields.AppTextField
 import com.autistasgourmet.pethub.ui.components.appButtons.AppPrimaryButton
+import com.autistasgourmet.pethub.ui.features.login.LoginViewModel
 
 @Composable
 fun LoginScreen(
@@ -118,13 +118,9 @@ fun LoginScreen(
 
         Row {
             Text(text = "¿No tienes cuenta? ", style = MaterialTheme.typography.bodyMedium)
-            Text(
+            AppClickableText(
                 text = "Regístrate",
-                style = MaterialTheme.typography.bodyLarge,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.clickable { onNavigateToRegister() },
-                textDecoration = TextDecoration.Underline
+                onClick = onNavigateToRegister
             )
         }
 

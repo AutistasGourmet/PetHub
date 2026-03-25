@@ -1,4 +1,4 @@
-package com.autistasgourmet.pethub.ui.features.register
+package com.autistasgourmet.pethub.ui.features.login.register
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf

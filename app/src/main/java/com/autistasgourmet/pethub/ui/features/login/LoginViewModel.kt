@@ -8,12 +8,12 @@ import androidx.lifecycle.viewModelScope
 import com.autistasgourmet.pethub.domain.usecase.LoginError
 import com.autistasgourmet.pethub.domain.usecase.LoginUseCase
 import com.autistasgourmet.pethub.ui.util.SnackbarManager
+import com.google.firebase.FirebaseNetworkException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import com.google.firebase.FirebaseNetworkException
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
@@ -53,7 +53,7 @@ class LoginViewModel @Inject constructor(
             isLoading = true
             emailError = null
             passwordError = null
-            
+
             val result = loginUseCase(email, password)
             result.onSuccess {
                 _loginSuccess.emit(true)

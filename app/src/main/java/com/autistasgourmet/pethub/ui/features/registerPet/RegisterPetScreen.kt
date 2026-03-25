@@ -14,10 +14,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.autistasgourmet.pethub.ui.components.appButtons.AppPrimaryButton
 
 @Composable
 fun RegisterPetScreen(
-    onBack: () -> Unit
+    onRegisterPetSuccess: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -30,14 +31,16 @@ fun RegisterPetScreen(
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold
         )
+
         Spacer(modifier = Modifier.height(24.dp))
 
         Text("Formulario de registro de mascota...")
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        Button(onClick = onBack) {
-            Text("Regresar")
-        }
+        AppPrimaryButton(
+            text = "Publicar Mascota",
+            onClick = onRegisterPetSuccess
+        )
     }
 }

@@ -13,15 +13,17 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.autistasgourmet.pethub.ui.components.AppBottomBar
-import com.autistasgourmet.pethub.ui.components.AppTopBar
+import com.autistasgourmet.pethub.ui.components.commons.AppBottomBar
+import com.autistasgourmet.pethub.ui.components.commons.AppTopBar
 import com.autistasgourmet.pethub.ui.navigation.AppNavHost
 import com.autistasgourmet.pethub.ui.navigation.MainRoute
 import com.autistasgourmet.pethub.ui.navigation.Route
@@ -42,6 +44,17 @@ class MainActivity : ComponentActivity() {
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
                 val destination = navBackStackEntry?.destination
 
+                val authViewModel: AuthViewModel = hiltViewModel()
+                val currentUser by authViewModel.currentUser.collectAsState(initial = null)
+
+                LaunchedEffect(currentUser) {
+                    if (currentUser == null) {
+                        navController.navigate(Route.Login) {
+                            popUpTo(0)
+                        }
+                    }
+                }
+
                 val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
                 val currentTitle = when {
@@ -49,11 +62,20 @@ class MainActivity : ComponentActivity() {
                     destination?.hasRoute<MainRoute.Adopt>() == true -> "Adoptar"
                     destination?.hasRoute<MainRoute.Publish>() == true -> "Publicar"
                     destination?.hasRoute<MainRoute.Profile>() == true -> "Perfil"
+                    destination?.hasRoute<MainRoute.CompleteAdopterProfile>() == true -> "Editar Perfil"
+                    destination?.hasRoute<MainRoute.PetDetail>() == true -> "Detalle"
                     else -> ""
                 }
 
                 val isMainRoute = destination?.let {
                     !it.hasRoute<Route.Login>() && !it.hasRoute<Route.Register>()
+                } ?: false
+
+                val showBackButton = isMainRoute && destination?.let {
+                    !it.hasRoute<MainRoute.Home>() &&
+                    !it.hasRoute<MainRoute.Adopt>() &&
+                    !it.hasRoute<MainRoute.Publish>() &&
+                    !it.hasRoute<MainRoute.Profile>()
                 } ?: false
 
                 val snackbarHostState = remember { SnackbarHostState() }
@@ -70,7 +92,12 @@ class MainActivity : ComponentActivity() {
                     snackbarHost = { SnackbarHost(snackbarHostState) },
                     topBar = {
                         if (isMainRoute) {
-                            AppTopBar(title = currentTitle)
+                            AppTopBar(
+                                title = currentTitle,
+                                onBackClick = if (showBackButton) {
+                                    { navController.popBackStack() }
+                                } else null
+                            )
                         }
                     },
                     bottomBar = {

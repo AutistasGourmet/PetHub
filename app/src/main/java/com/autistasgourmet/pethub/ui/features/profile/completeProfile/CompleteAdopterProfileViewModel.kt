@@ -1,4 +1,4 @@
-package com.autistasgourmet.pethub.ui.features.completeProfile
+package com.autistasgourmet.pethub.ui.features.profile.completeProfile
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -11,9 +11,11 @@ import com.autistasgourmet.pethub.domain.model.HousingType
 import com.autistasgourmet.pethub.domain.repository.AuthRepository
 import com.autistasgourmet.pethub.domain.usecase.AdopterProfileError
 import com.autistasgourmet.pethub.domain.usecase.CompleteAdopterProfileUseCase
+import com.autistasgourmet.pethub.domain.usecase.GetAdopterProfileUseCase
 import com.autistasgourmet.pethub.ui.util.SnackbarManager
 import com.google.firebase.FirebaseNetworkException
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.first
@@ -23,6 +25,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CompleteAdopterProfileViewModel @Inject constructor(
     private val completeAdopterProfileUseCase: CompleteAdopterProfileUseCase,
+    private val getAdopterProfileUseCase: GetAdopterProfileUseCase,
     private val authRepository: AuthRepository
 ) : ViewModel() {
 
@@ -85,6 +88,40 @@ class CompleteAdopterProfileViewModel @Inject constructor(
 
     private val _saveSuccess = MutableSharedFlow<Boolean>()
     val saveSuccess = _saveSuccess.asSharedFlow()
+
+    init {
+        loadExistingProfile()
+    }
+
+    private fun loadExistingProfile() {
+        viewModelScope.launch {
+            isLoading = true
+            val currentUser = authRepository.currentUser.first()
+            currentUser?.let { user ->
+                getAdopterProfileUseCase(user.uid)?.let { profile ->
+                    name = profile.name
+                    lastName = profile.lastName
+                    age = profile.age.toString()
+                    occupation = profile.occupation
+                    postalCode = profile.postalCode
+                    housingType = profile.housingType
+                    hasPatio = profile.hasPatio
+                    spaceRoutineDetails = profile.spaceRoutineDetails
+                    petExperience = profile.petExperience
+                    hasDogs = profile.hasDogs
+                    hasCats = profile.hasCats
+                    hasKids = profile.hasKids
+                    vetVisits = profile.vetVisits
+                    vaccination = profile.vaccination
+                    deworming = profile.deworming
+                    properHygiene = profile.properHygiene
+                    cleanWater = profile.cleanWater
+                    kibbleFeeding = profile.kibbleFeeding
+                }
+            }
+            isLoading = false
+        }
+    }
 
     // metodos de actualizacion
     fun onNameChange(value: String) { name = value; nameError = null }
@@ -182,7 +219,10 @@ class CompleteAdopterProfileViewModel @Inject constructor(
                     }
                 }
             }
-            is FirebaseNetworkException -> SnackbarManager.showMessage("Error de red. Revisa tu conexión.")
+            is FirebaseNetworkException, is TimeoutCancellationException -> {
+                SnackbarManager.showMessage("Sin conexión. Los cambios se guardarán automáticamente al volver a tener internet.")
+                _saveSuccess.emit(true)
+            }
             else -> SnackbarManager.showMessage(e.message ?: "Ocurrió un error inesperado")
         }
     }

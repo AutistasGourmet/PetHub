@@ -1,4 +1,4 @@
-package com.autistasgourmet.pethub.ui.features.register
+package com.autistasgourmet.pethub.ui.features.login.register
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState

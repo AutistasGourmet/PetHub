@@ -8,6 +8,7 @@ import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
+import com.google.firebase.auth.userProfileChangeRequest
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -53,6 +54,12 @@ class AuthRepositoryImpl(
         return try {
             val result = firebaseAuth.createUserWithEmailAndPassword(email, pass).await()
             val firebaseUser = result.user ?: throw Exception("No se pudo crear el usuario")
+            
+            val profileUpdates = userProfileChangeRequest {
+                displayName = name
+            }
+            firebaseUser.updateProfile(profileUpdates).await()
+
             Result.success(
                 User(
                     uid = firebaseUser.uid,

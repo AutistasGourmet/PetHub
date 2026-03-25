@@ -1,4 +1,4 @@
-package com.autistasgourmet.pethub.ui.components
+package com.autistasgourmet.pethub.ui.components.commons
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.offset

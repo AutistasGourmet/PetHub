@@ -1,4 +1,4 @@
-package com.autistasgourmet.pethub.ui.features.adopt
+package com.autistasgourmet.pethub.ui.features.adopt.adoptDetail
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf

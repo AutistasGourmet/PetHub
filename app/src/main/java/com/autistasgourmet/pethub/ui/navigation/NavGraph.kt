@@ -10,15 +10,15 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.autistasgourmet.pethub.ui.features.adopt.AdoptPetScreen
-import com.autistasgourmet.pethub.ui.features.adopt.PetDetailScreen
-import com.autistasgourmet.pethub.ui.features.completeProfile.CompleteAdopterProfileScreen
-import com.autistasgourmet.pethub.ui.features.completeProfile.CompleteAdopterProfileViewModel
+import com.autistasgourmet.pethub.ui.features.adopt.adoptDetail.PetDetailScreen
+import com.autistasgourmet.pethub.ui.features.profile.completeProfile.CompleteAdopterProfileScreen
+import com.autistasgourmet.pethub.ui.features.profile.completeProfile.CompleteAdopterProfileViewModel
 import com.autistasgourmet.pethub.ui.features.home.HomeScreen
 import com.autistasgourmet.pethub.ui.features.login.LoginScreen
 import com.autistasgourmet.pethub.ui.features.login.LoginViewModel
 import com.autistasgourmet.pethub.ui.features.profile.ProfileScreen
-import com.autistasgourmet.pethub.ui.features.register.RegisterScreen
-import com.autistasgourmet.pethub.ui.features.register.RegisterViewModel
+import com.autistasgourmet.pethub.ui.features.login.register.RegisterScreen
+import com.autistasgourmet.pethub.ui.features.login.register.RegisterViewModel
 import com.autistasgourmet.pethub.ui.features.registerPet.RegisterPetScreen
 
 @Composable
@@ -34,9 +34,9 @@ fun AppNavHost(
         composable<Route.Login> {
             val viewModel: LoginViewModel = hiltViewModel()
             // comentar para probar el login
-            navController.navigate(MainRoute.Home) {
-                popUpTo(Route.Login) { inclusive = true }
-            }
+//            navController.navigate(MainRoute.Home) {
+//                popUpTo(Route.Login) { inclusive = true }
+//            }
             LoginScreen(
                 viewModel = viewModel,
                 onLoginSuccess = {
@@ -86,7 +86,9 @@ fun AppNavHost(
 
         composable<MainRoute.Publish> {
             RegisterPetScreen(
-                onBack = { navController.popBackStack() }
+                onRegisterPetSuccess = {
+                    navController.popBackStack(MainRoute.Home, inclusive = false)
+                }
             )
         }
 
@@ -101,8 +103,10 @@ fun AppNavHost(
         composable<MainRoute.CompleteAdopterProfile> {
             val viewModel: CompleteAdopterProfileViewModel = hiltViewModel()
             CompleteAdopterProfileScreen(
-                onBack = { navController.popBackStack() },
-                viewModel = viewModel
+                viewModel = viewModel,
+                onSaveSuccess = {
+                    navController.popBackStack()
+                }
             )
         }
     }
