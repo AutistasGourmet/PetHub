@@ -1,14 +1,18 @@
 package com.autistasgourmet.pethub.ui.features.registerPet
 
+import android.app.Application
+import android.net.Uri
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.autistasgourmet.pethub.domain.model.*
 import com.autistasgourmet.pethub.domain.repository.AuthRepository
+import com.autistasgourmet.pethub.domain.repository.PetRepository
 import com.autistasgourmet.pethub.domain.usecase.SavePetError
 import com.autistasgourmet.pethub.domain.usecase.SavePetUseCase
+import com.autistasgourmet.pethub.ui.util.ImageUtils
 import com.autistasgourmet.pethub.ui.util.SnackbarManager
 import com.google.firebase.FirebaseNetworkException
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,13 +20,16 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
 class RegisterPetViewModel @Inject constructor(
+    application: Application,
     private val savePetUseCase: SavePetUseCase,
-    private val authRepository: AuthRepository
-) : ViewModel() {
+    private val authRepository: AuthRepository,
+    private val petRepository: PetRepository
+) : AndroidViewModel(application) {
 
     // estados de los campo de un Pet
     var name by mutableStateOf("")
@@ -45,9 +52,9 @@ class RegisterPetViewModel @Inject constructor(
         private set
 
     // listas fotos y rasgos
-    var selectedPhotos by mutableStateOf<List<String>>(emptyList())
+    var selectedPhotoUris by mutableStateOf<List<Uri>>(emptyList())
         private set
-    var affectionTraits by mutableStateOf<List<String>>(emptyList())
+    var selectedTraits by mutableStateOf<List<PetTrait>>(emptyList())
         private set
 
     // estados de sociabilidad
@@ -55,17 +62,8 @@ class RegisterPetViewModel @Inject constructor(
         private set
     var sociabilityDogs by mutableStateOf(SociabilityLevel.DESCONOCIDA)
         private set
-    var sociabilityCats by mutableStateOf(SociabilityLevel.DESCONOCIDA) // Agregado
+    var sociabilityCats by mutableStateOf(SociabilityLevel.DESCONOCIDA)
         private set
-
-    // listas de rasgos
-    var energyTraits by mutableStateOf<List<String>>(emptyList())
-        private set
-    var intelligenceTraits by mutableStateOf<List<String>>(emptyList())
-        private set
-    var instinctTraits by mutableStateOf<List<String>>(emptyList()) // Agregado
-        private set
-
 
     // estados para checklist
     var isVaccinated by mutableStateOf(false)
@@ -101,23 +99,13 @@ class RegisterPetViewModel @Inject constructor(
     }
     fun onSpecialConditionsChange(newValue: String) { specialConditions = newValue }
 
-    fun toggleAffectionTrait(trait: String) {
-        affectionTraits = if (affectionTraits.contains(trait)) affectionTraits - trait else affectionTraits + trait
+    fun toggleTrait(trait: PetTrait) {
+        selectedTraits = if (selectedTraits.contains(trait)) selectedTraits - trait else selectedTraits + trait
     }
 
     fun onSociabilityKidsChange(level: SociabilityLevel) { sociabilityKids = level }
     fun onSociabilityDogsChange(level: SociabilityLevel) { sociabilityDogs = level }
-    fun onSociabilityCatsChange(level: SociabilityLevel) { sociabilityCats = level } // Agregado
-
-    fun toggleEnergyTrait(trait: String) {
-        energyTraits = if (energyTraits.contains(trait)) energyTraits - trait else energyTraits + trait
-    }
-    fun toggleIntelligenceTrait(trait: String) {
-        intelligenceTraits = if (intelligenceTraits.contains(trait)) intelligenceTraits - trait else intelligenceTraits + trait
-    }
-    fun toggleInstinctTrait(trait: String) { // Agregado
-        instinctTraits = if (instinctTraits.contains(trait)) instinctTraits - trait else instinctTraits + trait
-    }
+    fun onSociabilityCatsChange(level: SociabilityLevel) { sociabilityCats = level }
 
     // metodos para listas enum y ckecklist
     fun onSpeciesChange(newSpecies: PetSpecies) { species = newSpecies }
@@ -129,12 +117,8 @@ class RegisterPetViewModel @Inject constructor(
     fun onSterilizedChange(value: Boolean) { isSterilized = value }
     fun onDewormedChange(value: Boolean) { isDewormed = value }
 
-    fun addPhoto(url: String) {
-        selectedPhotos = selectedPhotos + url
-    }
-
-    fun removePhoto(url: String) {
-        selectedPhotos = selectedPhotos - url
+    fun onPhotosSelected(uris: List<Uri>) {
+        selectedPhotoUris = uris
     }
 
     fun savePet() {
@@ -149,37 +133,58 @@ class RegisterPetViewModel @Inject constructor(
                 return@launch
             }
 
-            val pet = Pet(
-                ownerEmail = currentUser.email,
-                name = name,
-                species = species,
-                ageRange = ageRange,
-                size = size,
-                gender = gender,
-                energyLevel = energyLevel,
-                sociabilityKids = sociabilityKids,
-                sociabilityDogs = sociabilityDogs,
-                sociabilityCats = sociabilityCats,
-                affectionTraits = affectionTraits,
-                energyTraits = energyTraits,
-                intelligenceTraits = intelligenceTraits,
-                instinctTraits = instinctTraits,
-                photos = selectedPhotos,
-                description = description,
-                isVaccinated = isVaccinated,
-                isSterilized = isSterilized,
-                isDewormed = isDewormed,
-                specialConditions = specialConditions,
-                postalCode = postalCode,
-                city = ""
-            )
-
-            savePetUseCase(pet).onSuccess {
-                _saveSuccess.emit(true)
-            }.onFailure { e ->
-                handleError(e)
+            if (selectedPhotoUris.isEmpty()) {
+                SnackbarManager.showMessage("Debes subir al menos una foto")
+                isLoading = false
+                return@launch
             }
-            isLoading = false
+
+            try {
+                val photoIds = mutableListOf<String>()
+
+                // Procesar y guardar fotos en Base64 en una colección separada
+                selectedPhotoUris.forEach { uri ->
+                    val base64 = ImageUtils.uriToBase64(getApplication(), uri)
+                    if (base64 != null) {
+                        petRepository.savePetPhoto(base64).onSuccess { id ->
+                            photoIds.add(id)
+                        }.onFailure { throw it }
+                    }
+                }
+
+                val pet = Pet(
+                    id = UUID.randomUUID().toString(),
+                    ownerEmail = currentUser.email,
+                    name = name,
+                    species = species,
+                    ageRange = ageRange,
+                    size = size,
+                    gender = gender,
+                    energyLevel = energyLevel,
+                    sociabilityKids = sociabilityKids,
+                    sociabilityDogs = sociabilityDogs,
+                    sociabilityCats = sociabilityCats,
+                    traits = selectedTraits,
+                    photos = photoIds, // Guardamos los IDs de las fotos
+                    description = description,
+                    isVaccinated = isVaccinated,
+                    isSterilized = isSterilized,
+                    isDewormed = isDewormed,
+                    specialConditions = specialConditions,
+                    postalCode = postalCode,
+                    city = ""
+                )
+
+                savePetUseCase(pet).onSuccess {
+                    _saveSuccess.emit(true)
+                }.onFailure { e ->
+                    handleError(e)
+                }
+            } catch (e: Exception) {
+                SnackbarManager.showMessage("Error al procesar imágenes: ${e.message}")
+            } finally {
+                isLoading = false
+            }
         }
     }
 

@@ -16,6 +16,7 @@ class PetRepositoryImpl(
 ) : PetRepository {
 
     private val petsCollection = firestore.collection("pets")
+    private val photosCollection = firestore.collection("pet_photos")
 
     override fun getPets(): Flow<List<Pet>> = callbackFlow {
         val listener = petsCollection.addSnapshotListener { snapshot, error ->
@@ -68,6 +69,26 @@ class PetRepositoryImpl(
         return try {
             petsCollection.document(id).delete().await()
             Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun savePetPhoto(base64: String): Result<String> {
+        return try {
+            val photoData = mapOf("base64" to base64)
+            val docRef = photosCollection.add(photoData).await()
+            Result.success(docRef.id)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun getPetPhoto(photoId: String): Result<String> {
+        return try {
+            val doc = photosCollection.document(photoId).get().await()
+            val base64 = doc.getString("base64") ?: ""
+            Result.success(base64)
         } catch (e: Exception) {
             Result.failure(e)
         }

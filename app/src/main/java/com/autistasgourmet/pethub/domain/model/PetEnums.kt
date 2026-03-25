@@ -37,6 +37,30 @@ enum class SociabilityLevel(val displayName: String) {
     DESCONOCIDA("Desconocida")
 }
 
+enum class PetTrait(val displayName: String) {
+    CARINOSO("Cariñoso"),
+    SOCIABLE("Sociable"),
+    TIMIDO("Tímido"),
+    DESCONFIADO("Desconfiado"),
+    JUGUETON("Juguetón"),
+    ACTIVO("Activo"),
+    PEREZOSO("Perezoso"),
+    AGIL("Ágil"),
+    TRANQUILO("Tranquilo"),
+    INQUIETO("Inquieto"),
+    CURIOSO("Curioso"),
+    INTELIGENTE("Inteligente"),
+    TRAVIESO("Travieso"),
+    OBSERVADOR("Observador"),
+    ANSIOSO("Ansioso"),
+    ASTUTO("Astuto"),
+    GLOTON("Glotón"),
+    TERRITORIAL("Territorial"),
+    PROTECTOR("Protector"),
+    CAZADOR("Cazador"),
+    LEAL("Leal")
+}
+
 enum class HousingType(val displayName: String) {
     APARTAMENTO("Apartamento"),
     CASA("Casa"),

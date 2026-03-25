@@ -5,6 +5,7 @@ import com.autistasgourmet.pethub.data.remote.dto.PetDto
 import com.autistasgourmet.pethub.data.remote.dto.UserDto
 import com.autistasgourmet.pethub.domain.model.AdopterProfile
 import com.autistasgourmet.pethub.domain.model.Pet
+import com.autistasgourmet.pethub.domain.model.PetTrait
 import com.autistasgourmet.pethub.domain.model.User
 
 // User ------------------------------------------------------------------
@@ -36,10 +37,7 @@ fun PetDto.toDomain(): Pet = Pet(
     sociabilityKids = enumValueOf(sociabilityKids),
     sociabilityDogs = enumValueOf(sociabilityDogs),
     sociabilityCats = enumValueOf(sociabilityCats),
-    affectionTraits = affectionTraits,
-    energyTraits = energyTraits,
-    intelligenceTraits = intelligenceTraits,
-    instinctTraits = instinctTraits,
+    traits = traits.map { enumValueOf<PetTrait>(it) },
     photos = photos,
     description = description,
     isVaccinated = isVaccinated,
@@ -62,10 +60,7 @@ fun Pet.toDto(): PetDto = PetDto(
     sociabilityKids = sociabilityKids.name,
     sociabilityDogs = sociabilityDogs.name,
     sociabilityCats = sociabilityCats.name,
-    affectionTraits = affectionTraits,
-    energyTraits = energyTraits,
-    intelligenceTraits = intelligenceTraits,
-    instinctTraits = instinctTraits,
+    traits = traits.map { it.name },
     photos = photos,
     description = description,
     isVaccinated = isVaccinated,
