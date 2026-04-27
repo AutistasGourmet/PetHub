@@ -1,0 +1,53 @@
+@startuml
+actor "Animalover Adoptante" as user
+
+box "UI Layer (Compose)" #LightCyan
+participant "MatchScreen" as view
+participant "MatchViewModel" as vm
+end box
+
+box "Data Layer (Repositories)" #LightGreen
+participant "MatchRepository" as repo
+end box
+
+box "Remote Infrastructure (Firebase)" #LightPink
+participant "FirebaseFirestore" as db
+participant "FCM (Cloud Messaging)" as fcm
+end box
+
+user -> view: Realiza gesto de interés (Ej. Like)
+view -> vm: expressInterest(petId)
+activate vm
+
+vm -> repo: expressInterest(petId, adopterId)
+activate repo
+
+repo -> db: collection("interests").add({status: "pending", ...})
+activate db
+
+alt Operación exitosa
+    db --> repo: DocumentReference
+    deactivate db
+    repo -> fcm: Notifica al Publicante (nuevo interesado)
+    activate fcm
+    fcm --> repo: Success
+    deactivate fcm
+    repo --> vm: Result.success()
+    vm -> vm: Actualiza estado UI (Interés enviado)
+    view <-- vm: Muestra animación de match / éxito
+    user <-- view: Visualiza confirmación
+else Excepción (Ej. Sin conexión a internet)
+    db --> repo: FirebaseNetworkException
+    repo --> vm: Result.failure(Exception)
+    vm -> vm: Muestra mensaje "Error de conexión"
+    view <-- vm: Refleja error en UI
+else Excepción (Ej. Mascota ya asignada)
+    db --> repo: Error (Mascota no disponible)
+    repo --> vm: Result.failure(Exception)
+    vm -> vm: Muestra mensaje "Mascota ya asignada"
+    view <-- vm: Refleja error en UI
+end
+
+deactivate repo
+deactivate vm
+@enduml

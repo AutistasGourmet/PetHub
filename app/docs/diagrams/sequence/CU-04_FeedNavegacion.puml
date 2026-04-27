@@ -1,0 +1,44 @@
+@startuml
+actor "Animalover Adoptante" as user
+
+box "UI Layer (Compose)" #LightCyan
+participant "AdoptionFeedScreen" as view
+participant "AdoptionFeedViewModel" as vm
+end box
+
+box "Data Layer (Repositories)" #LightGreen
+participant "PetRepository" as repo
+end box
+
+box "Remote Infrastructure (Firebase)" #LightPink
+participant "FirebaseFirestore" as db
+end box
+
+user -> view: Ingresa al Feed de Adopción
+view -> vm: Inicia y solicita lista de mascotas
+activate vm
+
+vm -> repo: fetchCompatiblePets()
+activate repo
+
+repo -> db: collection("pets").where(...).get()
+activate db
+
+alt Datos recuperados exitosamente
+    db --> repo: QuerySnapshot (Lista de mascotas compatibles)
+    repo --> vm: Flow / StateFlow <List<Pet>>
+    vm -> vm: Actualiza estado (pets = lista)
+    view <-- vm: Renderiza pila de tarjetas
+    user <-- view: Visualiza tarjetas de mascotas compatibles
+else Error de conexión o servidor
+    db --> repo: FirebaseException
+    repo --> vm: Emite error o lista vacía
+    vm -> vm: Actualiza estado con error
+    view <-- vm: Muestra mensaje de error
+    user <-- view: Visualiza mensaje de error
+end
+
+deactivate db
+deactivate repo
+deactivate vm
+@enduml

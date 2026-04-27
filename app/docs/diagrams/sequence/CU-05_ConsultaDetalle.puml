@@ -1,0 +1,51 @@
+@startuml
+actor "Animalover Adoptante" as user
+
+box "UI Layer (Compose)" #LightCyan
+participant "PetDetailScreen" as view
+participant "PetDetailViewModel" as vm
+end box
+
+box "Data Layer (Repositories)" #LightGreen
+participant "PetRepository" as repo
+end box
+
+box "Remote Infrastructure (Firebase)" #LightPink
+participant "FirebaseFirestore" as db
+participant "FirebaseStorage" as storage
+end box
+
+user -> view: Selecciona una mascota en el feed
+view -> vm: getPetDetailsById(id)
+activate vm
+
+vm -> repo: getPetDetailsById(id)
+activate repo
+
+repo -> db: collection("pets").document(id).get()
+activate db
+db --> repo: DocumentSnapshot (Mascota)
+deactivate db
+
+loop Por cada foto de la mascota
+    repo -> storage: Recupera imagen desde Storage
+    activate storage
+    storage --> repo: Archivo de foto / URL
+    deactivate storage
+end
+
+alt Datos obtenidos correctamente
+    repo --> vm: Pet con fotos y documento completo
+    vm -> vm: Actualiza estado de UI (petDetail = datos)
+    view <-- vm: Muestra la ficha técnica
+    user <-- view: Visualiza detalle completo de la mascota
+else Error al recuperar datos (Ej. Mascota eliminada)
+    repo --> vm: Result.failure() o null
+    vm -> vm: Actualiza estado de error
+    view <-- vm: Muestra mensaje "Mascota no encontrada"
+    user <-- view: Visualiza mensaje de error
+end
+
+deactivate repo
+deactivate vm
+@enduml

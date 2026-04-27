@@ -1,0 +1,83 @@
+@startuml
+actor "Animalover Publicante" as user
+
+box "UI Layer (Compose)" #LightCyan
+participant "RegisterPetScreen" as view
+participant "RegisterPetViewModel" as vm
+end box
+
+box "Domain Layer" #LightYellow
+participant "SavePetUseCase" as uc
+end box
+
+box "Data Layer (Repositories)" #LightGreen
+participant "AuthRepository" as authRepo
+participant "PetRepositoryImpl" as repo
+end box
+
+box "Remote Infrastructure (Firebase)" #LightPink
+participant "FirebaseFirestore" as db
+end box
+
+user -> view: Llena formulario, sube fotos y hace clic en "Publicar Mascota"
+view -> vm: savePet()
+activate vm
+
+vm -> vm: isLoading = true
+vm -> authRepo: currentUser.first()
+activate authRepo
+authRepo --> vm: User
+deactivate authRepo
+
+vm -> vm: ImageUtils.uriToBase64(uri)
+
+loop Por cada foto seleccionada
+    vm -> repo: savePetPhoto(base64)
+    activate repo
+    repo -> db: collection("pet_photos").add(photoData)
+    activate db
+    db --> repo: DocumentReference
+    deactivate db
+    repo --> vm: Result.success(id)
+    deactivate repo
+end
+
+vm -> uc: invoke(pet)
+activate uc
+
+uc -> repo: savePet(pet)
+activate repo
+
+alt Crear nueva mascota (id está en blanco o es nuevo)
+    repo -> db: collection("pets").add(dto)
+    activate db
+    db --> repo: DocumentReference
+    deactivate db
+else Actualizar mascota
+    repo -> db: collection("pets").document(pet.id).set(dto)
+    activate db
+    db --> repo: Task<Void>
+    deactivate db
+end
+
+alt Operación exitosa
+    repo --> uc: Result.success(Unit)
+    uc --> vm: Result.success(Unit)
+    vm -> vm: _saveSuccess.emit(true)
+    vm -> vm: isLoading = false
+    view <-- vm: collect(_saveSuccess) -> onRegisterPetSuccess()
+    user <-- view: Navega al listado / confirmación
+else Excepción de Validación
+    uc --> vm: Result.failure(SavePetError.InvalidFields)
+    vm -> vm: Muestra errores en la UI (nameError, etc.)
+    vm -> vm: isLoading = false
+else Excepción de Red
+    repo --> uc: Result.failure(FirebaseNetworkException)
+    uc --> vm: Result.failure(Exception)
+    vm -> vm: SnackbarManager.showMessage("Error de red. Revisa tu conexión.")
+    vm -> vm: isLoading = false
+end
+
+deactivate uc
+deactivate vm
+@enduml

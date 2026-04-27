@@ -1,0 +1,65 @@
+@startuml
+actor "Animalover Adoptante" as user
+
+box "UI Layer (Compose)" #LightCyan
+participant "LoginScreen" as view
+participant "LoginViewModel" as vm
+end box
+
+box "Domain Layer" #LightYellow
+participant "LoginUseCase" as uc
+end box
+
+box "Data Layer (Repositories)" #LightGreen
+participant "AuthRepositoryImpl" as repo
+end box
+
+box "Remote Infrastructure (Firebase)" #LightPink
+participant "FirebaseAuth" as auth
+end box
+
+user -> view: Ingresa credenciales y hace clic en "Iniciar Sesión"
+view -> vm: login()
+activate vm
+
+vm -> vm: isLoading = true
+vm -> uc: invoke(email, password)
+activate uc
+
+uc -> repo: login(email, pass)
+activate repo
+
+repo -> auth: signInWithEmailAndPassword(email, pass)
+activate auth
+
+alt Inicio de sesión exitoso
+    auth --> repo: AuthResult (Success)
+    repo --> uc: Result.success(User)
+    uc --> vm: Result.success(User)
+    vm -> vm: _loginSuccess.emit(true)
+    vm -> vm: isLoading = false
+    view <-- vm: collect(_loginSuccess) -> onLoginSuccess()
+    user <-- view: Navega a la siguiente pantalla
+else Excepción (Ej. Sin conexión a internet)
+    auth --> repo: FirebaseNetworkException
+    repo --> uc: Result.failure(Exception)
+    uc --> vm: Result.failure(FirebaseNetworkException)
+    vm -> vm: SnackbarManager.showMessage("Error de conexión. Revisa tu internet.")
+    vm -> vm: isLoading = false
+    view <-- vm: Muestra mensaje de error
+    user <-- view: Visualiza mensaje de error
+else Excepción (Ej. Credenciales inválidas)
+    auth --> repo: FirebaseAuthInvalidCredentialsException
+    repo --> uc: Result.failure(Exception)
+    uc --> vm: Result.failure(LoginError.InvalidFields)
+    vm -> vm: emailError / passwordError = "..."
+    vm -> vm: isLoading = false
+    view <-- vm: Muestra error en campos
+    user <-- view: Ve error en los campos
+end
+
+deactivate auth
+deactivate repo
+deactivate uc
+deactivate vm
+@enduml

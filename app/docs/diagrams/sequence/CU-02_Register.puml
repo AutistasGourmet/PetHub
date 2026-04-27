@@ -1,0 +1,64 @@
+@startuml
+actor "Animalover Adoptante" as user
+
+box "UI Layer (Compose)" #LightCyan
+participant "RegisterScreen" as view
+participant "RegisterViewModel" as vm
+end box
+
+box "Domain Layer" #LightYellow
+participant "RegisterUseCase" as uc
+end box
+
+box "Data Layer (Repositories)" #LightGreen
+participant "AuthRepositoryImpl" as repo
+end box
+
+box "Remote Infrastructure (Firebase)" #LightPink
+participant "FirebaseAuth" as auth
+end box
+
+user -> view: Ingresa datos y hace clic en "Completar Registro"
+view -> vm: register()
+activate vm
+
+vm -> vm: isLoading = true
+vm -> uc: invoke(email, password, name)
+activate uc
+
+uc -> repo: register(email, pass, name)
+activate repo
+
+repo -> auth: createUserWithEmailAndPassword(email, pass)
+activate auth
+
+alt Registro exitoso
+    auth --> repo: AuthResult (Success)
+    repo -> auth: userProfileChangeRequest { displayName = name }
+    auth -> auth: updateProfile(profileUpdates)
+    auth --> repo: Task<Void> (Success)
+    repo --> uc: Result.success(User)
+    uc --> vm: Result.success(User)
+    vm -> vm: _registerSuccess.emit(true)
+    vm -> vm: isLoading = false
+    view <-- vm: collect(_registerSuccess) -> onRegisterSuccess()
+    user <-- view: Navega a la siguiente pantalla
+else Error de campos inválidos
+    uc --> vm: Result.failure(RegisterError.InvalidFields)
+    vm -> vm: nameError / emailError / passwordError = "..."
+    vm -> vm: isLoading = false
+    view <-- vm: Muestra errores en campos
+else Error de conexión o colisión
+    auth --> repo: FirebaseNetworkException / FirebaseAuthUserCollisionException
+    repo --> uc: Result.failure(Exception)
+    uc --> vm: Result.failure(Exception)
+    vm -> vm: SnackbarManager.showMessage(mensaje)
+    vm -> vm: isLoading = false
+    view <-- vm: Muestra mensaje de error
+end
+
+deactivate auth
+deactivate repo
+deactivate uc
+deactivate vm
+@enduml

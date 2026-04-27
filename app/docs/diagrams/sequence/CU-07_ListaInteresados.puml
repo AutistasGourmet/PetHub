@@ -1,0 +1,45 @@
+@startuml
+actor "Animalover Publicante" as user
+
+box "UI Layer (Compose)" #LightCyan
+participant "InterestsListScreen" as view
+participant "InterestsListViewModel" as vm
+end box
+
+box "Data Layer (Repositories)" #LightGreen
+participant "MatchRepository" as repo
+end box
+
+box "Remote Infrastructure (Firebase)" #LightPink
+participant "FirebaseFirestore" as db
+end box
+
+user -> view: Solicita ver quiénes dieron "like" a su mascota
+view -> vm: Carga la lista de interesados
+activate vm
+
+vm -> repo: getInterestsForPet(petId)
+activate repo
+
+repo -> db: collection("interests").where(petId).get()
+activate db
+
+alt Datos recuperados
+    db --> repo: QuerySnapshot (Lista de interesados)
+    deactivate db
+    repo -> repo: Ordenar por porcentaje de compatibilidad
+    repo --> vm: Lista ordenada de candidatos
+    vm -> vm: Actualiza estado (interests = lista)
+    view <-- vm: Renderiza el stack de candidatos
+    user <-- view: Visualiza lista de interesados ordenada
+else Error de red o servidor
+    db --> repo: FirebaseNetworkException
+    repo --> vm: Result.failure()
+    vm -> vm: Actualiza estado con error
+    view <-- vm: Muestra mensaje de error
+    user <-- view: Visualiza mensaje de error
+end
+
+deactivate repo
+deactivate vm
+@enduml

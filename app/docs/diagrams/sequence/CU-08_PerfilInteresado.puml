@@ -1,0 +1,44 @@
+@startuml
+actor "Animalover Publicante" as user
+
+box "UI Layer (Compose)" #LightCyan
+participant "ApplicantProfileScreen" as view
+participant "ApplicantProfileViewModel" as vm
+end box
+
+box "Data Layer (Repositories)" #LightGreen
+participant "UserRepository" as repo
+end box
+
+box "Remote Infrastructure (Firebase)" #LightPink
+participant "FirebaseFirestore" as db
+end box
+
+user -> view: Selecciona un candidato de la lista
+view -> vm: loadApplicantProfile(applicantId)
+activate vm
+
+vm -> repo: getApplicantProfile(applicantId)
+activate repo
+
+repo -> db: collection("users").document(applicantId).get()
+activate db
+
+alt Datos recuperados exitosamente
+    db --> repo: DocumentSnapshot (Perfil completo)
+    deactivate db
+    repo --> vm: Declaraciones socioeconómicas y de estilo de vida
+    vm -> vm: Actualiza estado de la UI (applicantProfile = datos)
+    view <-- vm: Muestra información detallada del perfil
+    user <-- view: Evalúa la idoneidad del candidato
+else Error al recuperar datos
+    db --> repo: FirebaseException
+    repo --> vm: Result.failure()
+    vm -> vm: Muestra mensaje de error
+    view <-- vm: Refleja error en UI
+    user <-- view: Visualiza mensaje de error
+end
+
+deactivate repo
+deactivate vm
+@enduml
