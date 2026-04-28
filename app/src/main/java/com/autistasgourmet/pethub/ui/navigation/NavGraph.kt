@@ -34,9 +34,11 @@ fun AppNavHost(
         composable<Route.Login> {
             val viewModel: LoginViewModel = hiltViewModel()
             // comentar para probar el login
-//            navController.navigate(MainRoute.Home) {
-//                popUpTo(Route.Login) { inclusive = true }
-//            }
+            androidx.compose.runtime.LaunchedEffect(Unit) {
+                navController.navigate(MainRoute.Home) {
+                    popUpTo(Route.Login) { inclusive = true }
+                }
+            }
             LoginScreen(
                 viewModel = viewModel,
                 onLoginSuccess = {
