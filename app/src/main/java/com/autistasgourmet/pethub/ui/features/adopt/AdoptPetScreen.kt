@@ -104,7 +104,11 @@ fun AdoptPetScreenContent(
                                 onSwipeLeft = { currentPets.remove(pet) },
                                 onSwipeRight = { currentPets.remove(pet) }
                             ) {
-                                AdoptPetCard(pet = pet, modifier = Modifier.fillMaxSize())
+                                AdoptPetCard(
+                                    pet = pet,
+                                    modifier = Modifier.fillMaxSize(),
+                                    onDetailClick = { onNavigateToDetail(pet.id) }
+                                )
                             }
                         }
                     }
