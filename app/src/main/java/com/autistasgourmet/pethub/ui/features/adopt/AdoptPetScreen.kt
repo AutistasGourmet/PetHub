@@ -5,7 +5,14 @@ import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import com.autistasgourmet.pethub.ui.components.appCards.SwipeableCard
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Surface
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.ui.graphics.Color
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -86,7 +93,8 @@ fun AdoptPetScreenContent(
             else -> {
                 Box(
                     modifier = Modifier
-                        .fillMaxSize()
+                        .weight(1f)
+                        .fillMaxWidth()
                         .padding(horizontal = 8.dp),
                     contentAlignment = Alignment.Center
                 ) {
@@ -96,8 +104,55 @@ fun AdoptPetScreenContent(
                                 onSwipeLeft = { currentPets.remove(pet) },
                                 onSwipeRight = { currentPets.remove(pet) }
                             ) {
-                                AdoptPetCard(pet = pet)
+                                AdoptPetCard(pet = pet, modifier = Modifier.fillMaxSize())
                             }
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                val currentPet = currentPets.firstOrNull()
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 24.dp),
+                    horizontalArrangement = Arrangement.SpaceEvenly,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    // Botón Dislike
+                    Surface(
+                        onClick = { currentPet?.let { currentPets.remove(it) } },
+                        shape = CircleShape,
+                        color = Color(0xFFFFB6C1), // Rosa suave
+                        shadowElevation = 8.dp,
+                        modifier = Modifier.size(80.dp)
+                    ) {
+                        Box(contentAlignment = Alignment.Center) {
+                            Icon(
+                                imageVector = Icons.Default.Close,
+                                contentDescription = "Falta de interés",
+                                tint = Color(0xFFE91E63),
+                                modifier = Modifier.size(40.dp)
+                            )
+                        }
+                    }
+
+                    // Botón Like
+                    Surface(
+                        onClick = { currentPet?.let { currentPets.remove(it) } },
+                        shape = CircleShape,
+                        color = Color(0xFFB9F6CA), // Verde suave
+                        shadowElevation = 8.dp,
+                        modifier = Modifier.size(80.dp)
+                    ) {
+                        Box(contentAlignment = Alignment.Center) {
+                            Icon(
+                                imageVector = Icons.Default.FavoriteBorder,
+                                contentDescription = "Expresar interés",
+                                tint = Color(0xFF00E676),
+                                modifier = Modifier.size(40.dp)
+                            )
                         }
                     }
                 }
