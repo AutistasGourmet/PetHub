@@ -55,8 +55,14 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun providePetRepository(firestore: FirebaseFirestore): PetRepository {
-        return PetRepositoryImpl(firestore)
+    fun providePetRepository(
+        firestore: FirebaseFirestore,
+        @ApplicationContext context: Context
+    ): PetRepository {
+        // Usa los datos estáticos de mock_pets.json
+        return com.autistasgourmet.pethub.data.repository.MockPetRepository(context)
+        // Descomenta la siguiente línea para regresar a usar Firebase Firestore:
+        // return PetRepositoryImpl(firestore)
     }
 
     @Provides

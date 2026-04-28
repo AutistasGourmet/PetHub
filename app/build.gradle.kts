@@ -30,7 +30,7 @@ android {
             )
         }
     }
-    
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
@@ -39,7 +39,7 @@ android {
     // AGP 9.x
     kotlin {
         compilerOptions {
-        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
         }
     }
 
@@ -51,19 +51,19 @@ android {
 dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
-    
+
     // Compose
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.bundles.compose)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.androidx.compose.foundation.layout)
-    
+
     // Hilt
     implementation(libs.hilt.android)
     implementation(libs.firebase.storage)
     ksp(libs.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
-    
+
     // Firebase
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
