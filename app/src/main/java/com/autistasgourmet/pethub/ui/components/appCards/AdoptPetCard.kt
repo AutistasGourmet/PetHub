@@ -32,11 +32,11 @@ fun AdoptPetCard(
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         modifier = modifier.fillMaxWidth()
     ) {
-        Column(modifier = Modifier.fillMaxWidth()) {
+        Column(modifier = Modifier.fillMaxSize()) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(350.dp)
+                    .weight(1f)
                     .background(Color(0xFFE5E7EB))
             ) {
                 if (pet.photos.isNotEmpty()) {
@@ -145,7 +145,7 @@ fun AdoptPetCard(
 @Composable
 fun AdoptPetCardPreview() {
     MaterialTheme {
-        Box(modifier = Modifier.padding(16.dp)) {
+        Box(modifier = Modifier.padding(16.dp).fillMaxWidth().height(600.dp)) {
             AdoptPetCard(
                 pet = Pet(
                     id = "1",
