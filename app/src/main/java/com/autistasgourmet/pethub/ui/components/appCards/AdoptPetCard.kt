@@ -6,6 +6,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Pets
+import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -20,11 +21,13 @@ import coil.compose.AsyncImage
 import com.autistasgourmet.pethub.domain.model.*
 import com.autistasgourmet.pethub.ui.components.appChips.AppTraitChip
 import com.autistasgourmet.pethub.ui.components.appChips.AppTraitChipType
+import com.autistasgourmet.pethub.ui.components.media.AppPhotoPager
 
 @Composable
 fun AdoptPetCard(
     pet: Pet,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onDetailClick: () -> Unit = {}
 ) {
     Card(
         shape = RoundedCornerShape(24.dp),
@@ -39,24 +42,10 @@ fun AdoptPetCard(
                     .weight(1f)
                     .background(Color(0xFFE5E7EB))
             ) {
-                if (pet.photos.isNotEmpty()) {
-                    AsyncImage(
-                        model = pet.photos.first(),
-                        contentDescription = "Foto de ${pet.name}",
-                        modifier = Modifier.fillMaxSize(),
-                        contentScale = ContentScale.Crop
-                    )
-                } else {
-                    // Fallback to placeholder if no photos
-                    Icon(
-                        imageVector = Icons.Default.Pets,
-                        contentDescription = null,
-                        modifier = Modifier
-                            .size(120.dp)
-                            .align(Alignment.Center),
-                        tint = Color.Gray.copy(alpha = 0.5f)
-                    )
-                }
+                AppPhotoPager(
+                    photos = pet.photos,
+                    modifier = Modifier.fillMaxSize()
+                )
                 
                 Surface(
                     color = Color.Black.copy(alpha = 0.5f),
@@ -94,20 +83,40 @@ fun AdoptPetCard(
                     .padding(20.dp)
             ) {
                 Row(
-                    verticalAlignment = Alignment.Bottom
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text(
-                        text = "${pet.name},",
-                        style = MaterialTheme.typography.headlineMedium,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = pet.ageRange.displayName,
-                        style = MaterialTheme.typography.titleLarge,
-                        color = Color.Gray,
-                        modifier = Modifier.padding(bottom = 2.dp)
-                    )
+                    Row(verticalAlignment = Alignment.Bottom) {
+                        Text(
+                            text = "${pet.name},",
+                            style = MaterialTheme.typography.headlineMedium,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = pet.ageRange.displayName,
+                            style = MaterialTheme.typography.titleLarge,
+                            color = Color.Gray,
+                            modifier = Modifier.padding(bottom = 2.dp)
+                        )
+                    }
+                    
+                    Surface(
+                        onClick = onDetailClick,
+                        shape = androidx.compose.foundation.shape.CircleShape,
+                        color = Color(0xFFE5E7EB),
+                        modifier = Modifier.size(48.dp)
+                    ) {
+                        Box(contentAlignment = Alignment.Center) {
+                            Icon(
+                                imageVector = Icons.Default.ArrowForward,
+                                contentDescription = "Ver detalles",
+                                tint = Color.Black,
+                                modifier = Modifier.size(24.dp)
+                            )
+                        }
+                    }
                 }
 
                 Spacer(modifier = Modifier.height(12.dp))

@@ -59,9 +59,12 @@ object AppModule {
         firestore: FirebaseFirestore,
         @ApplicationContext context: Context
     ): PetRepository {
-        // Usa los datos estáticos de mock_pets.json
+        // ====== MODO DE PRUEBAS (LOCAL) ======
+        // Comenta esta línea si vas a usar la versión de Firebase
         return com.autistasgourmet.pethub.data.repository.MockPetRepository(context)
-        // Descomenta la siguiente línea para regresar a usar Firebase Firestore:
+
+        // ====== MODO DE PRODUCCIÓN (FIREBASE) ======
+        // Descomenta esta línea para usar los datos reales de Firestore:
         // return PetRepositoryImpl(firestore)
     }
 
