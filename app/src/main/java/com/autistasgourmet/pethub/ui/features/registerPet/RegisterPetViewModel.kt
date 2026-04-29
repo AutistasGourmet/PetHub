@@ -146,7 +146,7 @@ class RegisterPetViewModel @Inject constructor(
                 selectedPhotoUris.forEach { uri ->
                     val base64 = ImageUtils.uriToBase64(getApplication(), uri)
                     if (base64 != null) {
-                        petRepository.savePetPhoto(base64).onSuccess { id ->
+                        petRepository.savePetPhoto(currentUser.uid, base64).onSuccess { id ->
                             photoIds.add(id)
                         }.onFailure { throw it }
                     }

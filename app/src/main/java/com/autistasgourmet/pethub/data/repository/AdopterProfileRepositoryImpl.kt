@@ -36,6 +36,7 @@ class AdopterProfileRepositoryImpl(
 
     override suspend fun saveProfile(profile: AdopterProfile): Result<Unit> {
         return try {
+            android.util.Log.d("AdopterProfileRepo", "Intentando guardar perfil para el ID: ${profile.userId}")
             withTimeout(3000) {
                 profilesCollection.document(profile.userId).set(profile.toDto()).await()
             }

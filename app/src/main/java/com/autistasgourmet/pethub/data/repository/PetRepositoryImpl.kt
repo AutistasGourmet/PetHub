@@ -75,9 +75,12 @@ class PetRepositoryImpl(
         }
     }
 
-    override suspend fun savePetPhoto(base64: String): Result<String> {
+    override suspend fun savePetPhoto(userId: String, base64: String): Result<String> {
         return try {
-            val photoData = mapOf("base64" to base64)
+            val photoData = mapOf(
+                "userId" to userId,
+                "base64" to base64
+            )
             val docRef = photosCollection.add(photoData).await()
             Result.success(docRef.id)
         } catch (e: Exception) {

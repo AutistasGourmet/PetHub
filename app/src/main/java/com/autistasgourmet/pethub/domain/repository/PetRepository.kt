@@ -11,7 +11,7 @@ interface PetRepository {
     suspend fun deletePet(id: String): Result<Unit>
 
     // fotos en Base64
-    suspend fun savePetPhoto(base64: String): Result<String>
+    suspend fun savePetPhoto(userId: String, base64: String): Result<String>
     suspend fun getPetPhoto(photoId: String): Result<String>
 
     // los intereses (CU-06)
