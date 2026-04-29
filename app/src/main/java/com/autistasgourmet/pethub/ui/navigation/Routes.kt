@@ -15,4 +15,5 @@ sealed interface MainRoute {
     @Serializable data object CompleteAdopterProfile : MainRoute
     @Serializable data class PetDetail(val petId: String) : MainRoute
     @Serializable data object Matches : MainRoute
+    @Serializable data class CandidateProfile(val userId: String) : MainRoute
 }

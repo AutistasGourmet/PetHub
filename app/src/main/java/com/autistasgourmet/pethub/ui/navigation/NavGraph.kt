@@ -116,8 +116,15 @@ fun AppNavHost(
         composable<MainRoute.Matches> {
             com.autistasgourmet.pethub.ui.features.matches.MatchesScreen(
                 onNavigateToProfile = { userId ->
-                    // Navegación futura al perfil del usuario
+                    navController.navigate(MainRoute.CandidateProfile(userId))
                 }
+            )
+        }
+
+        composable<MainRoute.CandidateProfile> { backStackEntry ->
+            val detail: MainRoute.CandidateProfile = backStackEntry.toRoute()
+            com.autistasgourmet.pethub.ui.features.matches.candidateDetail.CandidateProfileScreen(
+                onBack = { navController.popBackStack() }
             )
         }
     }
