@@ -1,5 +1,7 @@
 package com.autistasgourmet.pethub.data.remote.dto
 
+import com.google.firebase.firestore.PropertyName
+
 data class PetDto(
     val id: String = "",
     val ownerEmail: String = "",
@@ -15,9 +17,15 @@ data class PetDto(
     val traits: List<String> = emptyList(),
     val photos: List<String> = emptyList(),
     val description: String = "",
-    val isVaccinated: Boolean = false,
-    val isSterilized: Boolean = false,
-    val isDewormed: Boolean = false,
+    @get:PropertyName("vaccinated")
+    @set:PropertyName("vaccinated")
+    var isVaccinated: Boolean = false,
+    @get:PropertyName("sterilized")
+    @set:PropertyName("sterilized")
+    var isSterilized: Boolean = false,
+    @get:PropertyName("dewormed")
+    @set:PropertyName("dewormed")
+    var isDewormed: Boolean = false,
     val specialConditions: String = "",
     val postalCode: String = "",
     val city: String = ""

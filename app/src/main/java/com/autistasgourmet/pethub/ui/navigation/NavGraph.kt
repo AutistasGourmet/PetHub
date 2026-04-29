@@ -33,10 +33,6 @@ fun AppNavHost(
     ) {
         composable<Route.Login> {
             val viewModel: LoginViewModel = hiltViewModel()
-            // comentar para probar el login
-//            navController.navigate(MainRoute.Home) {
-//                popUpTo(Route.Login) { inclusive = true }
-//            }
             LoginScreen(
                 viewModel = viewModel,
                 onLoginSuccess = {
@@ -70,8 +66,8 @@ fun AppNavHost(
 
         composable<MainRoute.Adopt> {
             AdoptPetScreen(
-                onNavigateToDetail = { petId ->
-                    navController.navigate(MainRoute.PetDetail(petId))
+                onNavigateToDetail = { petId, petName ->
+                    navController.navigate(MainRoute.PetDetail(petId, petName))
                 }
             )
         }
@@ -79,8 +75,7 @@ fun AppNavHost(
         composable<MainRoute.PetDetail> { backStackEntry ->
             val detail: MainRoute.PetDetail = backStackEntry.toRoute()
             PetDetailScreen(
-                petId = detail.petId,
-                onBack = { navController.popBackStack() }
+                petId = detail.petId
             )
         }
 

@@ -17,6 +17,7 @@ class PetRepositoryImpl(
 
     private val petsCollection = firestore.collection("pets")
     private val photosCollection = firestore.collection("pet_photos")
+    private val interestsCollection = firestore.collection("interests")
 
     override fun getPets(): Flow<List<Pet>> = callbackFlow {
         val listener = petsCollection.addSnapshotListener { snapshot, error ->
@@ -92,5 +93,38 @@ class PetRepositoryImpl(
         } catch (e: Exception) {
             Result.failure(e)
         }
+    }
+
+    override suspend fun registerInterest(
+        petId: String,
+        userId: String,
+        isInterested: Boolean
+    ): Result<Unit> {
+        return try {
+            val data = mapOf(
+                "petId" to petId,
+                "userId" to userId,
+                "isInterested" to isInterested,
+                "timestamp" to System.currentTimeMillis()
+            )
+            interestsCollection.add(data).await()
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override fun getUserInterests(userId: String): Flow<List<String>> = callbackFlow {
+        val listener = interestsCollection
+            .whereEqualTo("userId", userId)
+            .addSnapshotListener { snapshot, error ->
+                if (error != null) {
+                    close(error)
+                    return@addSnapshotListener
+                }
+                val petIds = snapshot?.documents?.mapNotNull { it.getString("petId") } ?: emptyList()
+                trySend(petIds)
+            }
+        awaitClose { listener.remove() }
     }
 }

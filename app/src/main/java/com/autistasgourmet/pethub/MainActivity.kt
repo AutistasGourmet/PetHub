@@ -22,6 +22,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.autistasgourmet.pethub.ui.components.commons.AppBottomBar
 import com.autistasgourmet.pethub.ui.components.commons.AppTopBar
 import com.autistasgourmet.pethub.ui.navigation.AppNavHost
@@ -63,7 +64,10 @@ class MainActivity : ComponentActivity() {
                     destination?.hasRoute<MainRoute.Publish>() == true -> "Publicar"
                     destination?.hasRoute<MainRoute.Profile>() == true -> "Perfil"
                     destination?.hasRoute<MainRoute.CompleteAdopterProfile>() == true -> "Editar Perfil"
-                    destination?.hasRoute<MainRoute.PetDetail>() == true -> "Detalle"
+                    destination?.hasRoute<MainRoute.PetDetail>() == true -> {
+                        val route = navBackStackEntry?.toRoute<MainRoute.PetDetail>()
+                        route?.let { "Perfil de ${it.petName}" } ?: "Detalle"
+                    }
                     else -> ""
                 }
 

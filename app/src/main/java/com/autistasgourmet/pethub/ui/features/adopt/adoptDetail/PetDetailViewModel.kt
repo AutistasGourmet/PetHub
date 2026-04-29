@@ -13,7 +13,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PetDetailViewModel @Inject constructor(
-    private val getPetDetailUseCase: GetPetDetailUseCase
+    private val getPetDetailUseCase: GetPetDetailUseCase,
+    val petRepository: com.autistasgourmet.pethub.domain.repository.PetRepository
 ) : ViewModel() {
 
     var pet by mutableStateOf<Pet?>(null)

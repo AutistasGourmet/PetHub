@@ -10,7 +10,11 @@ interface PetRepository {
     suspend fun savePet(pet: Pet): Result<Unit>
     suspend fun deletePet(id: String): Result<Unit>
 
-    // Fotos en Base64
+    // fotos en Base64
     suspend fun savePetPhoto(base64: String): Result<String>
     suspend fun getPetPhoto(photoId: String): Result<String>
+
+    // los intereses (CU-06)
+    suspend fun registerInterest(petId: String, userId: String, isInterested: Boolean): Result<Unit>
+    fun getUserInterests(userId: String): Flow<List<String>>
 }

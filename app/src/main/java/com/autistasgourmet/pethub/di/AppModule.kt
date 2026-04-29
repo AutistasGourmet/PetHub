@@ -12,6 +12,7 @@ import com.autistasgourmet.pethub.domain.repository.PetRepository
 import com.autistasgourmet.pethub.domain.repository.PostalCodeRepository
 import com.autistasgourmet.pethub.domain.repository.StorageRepository
 import com.autistasgourmet.pethub.domain.usecase.CompleteAdopterProfileUseCase
+import com.autistasgourmet.pethub.domain.usecase.ExpressInterestUseCase
 import com.autistasgourmet.pethub.domain.usecase.GetAdoptablePetsUseCase
 import com.autistasgourmet.pethub.domain.usecase.GetPetDetailUseCase
 import com.autistasgourmet.pethub.domain.usecase.LoginUseCase
@@ -111,8 +112,18 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideGetAdoptablePetsUseCase(repository: PetRepository): GetAdoptablePetsUseCase {
-        return GetAdoptablePetsUseCase(repository)
+    fun provideGetAdoptablePetsUseCase(
+        repository: PetRepository,
+        authRepository: AuthRepository,
+        profileRepository: AdopterProfileRepository
+    ): GetAdoptablePetsUseCase {
+        return GetAdoptablePetsUseCase(repository, authRepository, profileRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideExpressInterestUseCase(repository: PetRepository): ExpressInterestUseCase {
+        return ExpressInterestUseCase(repository)
     }
 
     @Provides
