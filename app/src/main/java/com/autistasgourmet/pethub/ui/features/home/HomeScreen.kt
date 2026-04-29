@@ -38,6 +38,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.autistasgourmet.pethub.ui.components.AppCheckBox
 import com.autistasgourmet.pethub.ui.components.AppDropdown
 import com.autistasgourmet.pethub.ui.components.AppSectionText
@@ -47,11 +48,14 @@ import com.autistasgourmet.pethub.ui.components.appChips.AppFilterChips
 import com.autistasgourmet.pethub.ui.components.appFields.AppNumberField
 import com.autistasgourmet.pethub.ui.components.appFields.AppTextArea
 import com.autistasgourmet.pethub.ui.components.appFields.AppTextField
+import com.autistasgourmet.pethub.ui.navigation.NavigationViewModel
 
 @Composable
 fun HomeScreen(
     onNavigateToAdopt: () -> Unit,
-    onNavigateToPublish: () -> Unit
+    onNavigateToPublish: () -> Unit,
+    onNavigateToMatches: () -> Unit,
+    navigationViewModel: NavigationViewModel = hiltViewModel()
 ) {
     Column(
         modifier = Modifier
@@ -85,7 +89,11 @@ fun HomeScreen(
                 iconContainerColor = Color.Magenta.copy(alpha = 0.1f),
                 iconColor = Color.Magenta,
                 modifier = Modifier.weight(1f),
-                onClick = onNavigateToAdopt
+                onClick = {
+                    navigationViewModel.validateAdoptionAccess {
+                        onNavigateToAdopt()
+                    }
+                }
             )
             QuickAccessCard(
                 title = "Publicar Mascota",
@@ -96,6 +104,22 @@ fun HomeScreen(
                 modifier = Modifier.weight(1f),
                 onClick = onNavigateToPublish
             )
+        }
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            QuickAccessCard(
+                title = "Mis Matches",
+                description = "Descubre quién está listo para adoptar",
+                icon = Icons.Default.Person,
+                iconContainerColor = Color(0xFFE8F5E9), // Light green
+                iconColor = Color(0xFF4CAF50), // Green
+                modifier = Modifier.weight(0.5f),
+                onClick = onNavigateToMatches
+            )
+            Spacer(modifier = Modifier.weight(0.5f))
         }
     }
 }

@@ -27,6 +27,7 @@ import com.autistasgourmet.pethub.ui.components.commons.AppBottomBar
 import com.autistasgourmet.pethub.ui.components.commons.AppTopBar
 import com.autistasgourmet.pethub.ui.navigation.AppNavHost
 import com.autistasgourmet.pethub.ui.navigation.MainRoute
+import com.autistasgourmet.pethub.ui.navigation.NavigationViewModel
 import com.autistasgourmet.pethub.ui.navigation.Route
 import com.autistasgourmet.pethub.ui.theme.PetHubTheme
 import com.autistasgourmet.pethub.ui.util.SnackbarManager
@@ -46,6 +47,7 @@ class MainActivity : ComponentActivity() {
                 val destination = navBackStackEntry?.destination
 
                 val authViewModel: AuthViewModel = hiltViewModel()
+                val navigationViewModel: NavigationViewModel = hiltViewModel()
                 val currentUser by authViewModel.currentUser.collectAsState(initial = null)
 
                 LaunchedEffect(currentUser) {
@@ -68,6 +70,8 @@ class MainActivity : ComponentActivity() {
                         val route = navBackStackEntry?.toRoute<MainRoute.PetDetail>()
                         route?.let { "Perfil de ${it.petName}" } ?: "Detalle"
                     }
+                    destination?.hasRoute<MainRoute.Matches>() == true -> "Matches"
+                    destination?.hasRoute<MainRoute.CandidateProfile>() == true -> "Perfil de Adoptante"
                     else -> ""
                 }
 
@@ -109,12 +113,24 @@ class MainActivity : ComponentActivity() {
                             AppBottomBar(
                                 currentDestination = destination,
                                 onNavigate = { route ->
-                                    navController.navigate(route) {
-                                        popUpTo(navController.graph.startDestinationId) {
-                                            saveState = true
+                                    if (route is MainRoute.Adopt) {
+                                        navigationViewModel.validateAdoptionAccess {
+                                            navController.navigate(route) {
+                                                popUpTo(navController.graph.startDestinationId) {
+                                                    saveState = true
+                                                }
+                                                launchSingleTop = true
+                                                restoreState = true
+                                            }
                                         }
-                                        launchSingleTop = true
-                                        restoreState = true
+                                    } else {
+                                        navController.navigate(route) {
+                                            popUpTo(navController.graph.startDestinationId) {
+                                                saveState = true
+                                            }
+                                            launchSingleTop = true
+                                            restoreState = true
+                                        }
                                     }
                                 }
                             )

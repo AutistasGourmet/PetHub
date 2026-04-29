@@ -22,3 +22,5 @@ data class AdopterProfile(
     val cleanWater: Boolean,
     val kibbleFeeding: Boolean
 )
+
+class ProfileMissingException : Exception("Perfil de adoptante no encontrado")

@@ -19,6 +19,8 @@ import com.autistasgourmet.pethub.ui.features.login.LoginViewModel
 import com.autistasgourmet.pethub.ui.features.profile.ProfileScreen
 import com.autistasgourmet.pethub.ui.features.login.register.RegisterScreen
 import com.autistasgourmet.pethub.ui.features.login.register.RegisterViewModel
+import com.autistasgourmet.pethub.ui.features.matches.MatchesScreen
+import com.autistasgourmet.pethub.ui.features.matches.candidateDetail.CandidateProfileScreen
 import com.autistasgourmet.pethub.ui.features.registerPet.RegisterPetScreen
 
 @Composable
@@ -60,7 +62,8 @@ fun AppNavHost(
         composable<MainRoute.Home> {
             HomeScreen(
                 onNavigateToAdopt = { navController.navigate(MainRoute.Adopt) },
-                onNavigateToPublish = { navController.navigate(MainRoute.Publish) }
+                onNavigateToPublish = { navController.navigate(MainRoute.Publish) },
+                onNavigateToMatches = { navController.navigate(MainRoute.Matches) }
             )
         }
 
@@ -102,6 +105,22 @@ fun AppNavHost(
                 onSaveSuccess = {
                     navController.popBackStack()
                 }
+            )
+        }
+
+        composable<MainRoute.Matches> {
+            MatchesScreen(
+                onNavigateToProfile = { userId, petName ->
+                    navController.navigate(MainRoute.CandidateProfile(userId, petName))
+                }
+            )
+        }
+
+        composable<MainRoute.CandidateProfile> { backStackEntry ->
+            val detail: MainRoute.CandidateProfile = backStackEntry.toRoute()
+            CandidateProfileScreen(
+                petName = detail.petName,
+                onBack = { navController.popBackStack() }
             )
         }
     }

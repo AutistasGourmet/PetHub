@@ -101,13 +101,25 @@ class PetRepositoryImpl(
         isInterested: Boolean
     ): Result<Unit> {
         return try {
+            val query = interestsCollection
+                .whereEqualTo("petId", petId)
+                .whereEqualTo("userId", userId)
+                .get()
+                .await()
+
             val data = mapOf(
                 "petId" to petId,
                 "userId" to userId,
                 "isInterested" to isInterested,
                 "timestamp" to System.currentTimeMillis()
             )
-            interestsCollection.add(data).await()
+
+            if (query.isEmpty) {
+                interestsCollection.add(data).await()
+            } else {
+                val docId = query.documents.first().id
+                interestsCollection.document(docId).update(data).await()
+            }
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
@@ -124,6 +136,24 @@ class PetRepositoryImpl(
                 }
                 val petIds = snapshot?.documents?.mapNotNull { it.getString("petId") } ?: emptyList()
                 trySend(petIds)
+            }
+        awaitClose { listener.remove() }
+    }
+
+    override fun getInterestsForPet(petId: String): Flow<List<String>> = callbackFlow {
+        val listener = interestsCollection
+            .whereEqualTo("petId", petId)
+            .addSnapshotListener { snapshot, error ->
+                if (error != null) {
+                    close(error)
+                    return@addSnapshotListener
+                }
+                // Filtramos en memoria para evitar problemas de índices/permisos complejos en Firestore
+                val userIds = snapshot?.documents?.mapNotNull { doc ->
+                    val interested = doc.getBoolean("isInterested") ?: false
+                    if (interested) doc.getString("userId") else null
+                } ?: emptyList()
+                trySend(userIds)
             }
         awaitClose { listener.remove() }
     }

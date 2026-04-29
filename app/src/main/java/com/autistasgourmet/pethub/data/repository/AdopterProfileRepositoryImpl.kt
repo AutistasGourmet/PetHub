@@ -19,10 +19,17 @@ class AdopterProfileRepositoryImpl(
 
     override suspend fun getProfile(userId: String): AdopterProfile? {
         return try {
-            profilesCollection.document(userId).get().await()
-                .toObject(AdopterProfileDto::class.java)
-                ?.toDomain()
+            android.util.Log.d("AdopterProfileRepo", "Buscando perfil en adopt_profiles para el ID: $userId")
+            val document = profilesCollection.document(userId).get().await()
+            if (document.exists()) {
+                android.util.Log.d("AdopterProfileRepo", "Perfil encontrado en Firestore para: $userId")
+                document.toObject(AdopterProfileDto::class.java)?.toDomain()
+            } else {
+                android.util.Log.d("AdopterProfileRepo", "No existe documento para el ID: $userId en adopt_profiles")
+                null
+            }
         } catch (e: Exception) {
+            android.util.Log.e("AdopterProfileRepo", "Error al obtener perfil: ${e.message}", e)
             null
         }
     }

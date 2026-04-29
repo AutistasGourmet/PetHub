@@ -17,4 +17,5 @@ interface PetRepository {
     // los intereses (CU-06)
     suspend fun registerInterest(petId: String, userId: String, isInterested: Boolean): Result<Unit>
     fun getUserInterests(userId: String): Flow<List<String>>
+    fun getInterestsForPet(petId: String): Flow<List<String>> // Retorna lista de userIds interesados
 }
