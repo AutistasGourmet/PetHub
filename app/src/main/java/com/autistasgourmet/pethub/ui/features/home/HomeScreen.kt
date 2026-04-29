@@ -19,6 +19,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Login
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Group
 import androidx.compose.material.icons.outlined.AddBox
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -47,11 +48,12 @@ import com.autistasgourmet.pethub.ui.components.appChips.AppFilterChips
 import com.autistasgourmet.pethub.ui.components.appFields.AppNumberField
 import com.autistasgourmet.pethub.ui.components.appFields.AppTextArea
 import com.autistasgourmet.pethub.ui.components.appFields.AppTextField
-
+import com.autistasgourmet.pethub.ui.components.appCards.QuickAccessCard
 @Composable
 fun HomeScreen(
     onNavigateToAdopt: () -> Unit,
-    onNavigateToPublish: () -> Unit
+    onNavigateToPublish: () -> Unit,
+    onNavigateToMatches: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -97,63 +99,21 @@ fun HomeScreen(
                 onClick = onNavigateToPublish
             )
         }
-    }
-}
 
-@Composable
-fun QuickAccessCard(
-    title: String,
-    description: String,
-    icon: ImageVector,
-    iconContainerColor: Color,
-    iconColor: Color,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Card(
-        modifier = modifier
-            .height(200.dp)
-            .clickable { onClick() },
-        shape = RoundedCornerShape(24.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-    ) {
-        Column(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.SpaceBetween
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            Box(
-                modifier = Modifier
-                    .size(48.dp)
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(iconContainerColor),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    imageVector = icon,
-                    contentDescription = null,
-                    modifier = Modifier.size(24.dp),
-                    tint = iconColor
-                )
-            }
-
-            Column {
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = description,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
+            QuickAccessCard(
+                title = "Mis Matches",
+                description = "Descubre quién está listo para adoptar",
+                icon = Icons.Default.Group,
+                iconContainerColor = Color.Green.copy(alpha = 0.1f),
+                iconColor = Color.Green,
+                modifier = Modifier.weight(1f),
+                onClick = onNavigateToMatches
+            )
+            Spacer(modifier = Modifier.weight(1f))
         }
     }
 }

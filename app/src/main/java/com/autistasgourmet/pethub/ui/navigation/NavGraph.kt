@@ -66,7 +66,8 @@ fun AppNavHost(
         composable<MainRoute.Home> {
             HomeScreen(
                 onNavigateToAdopt = { navController.navigate(MainRoute.Adopt) },
-                onNavigateToPublish = { navController.navigate(MainRoute.Publish) }
+                onNavigateToPublish = { navController.navigate(MainRoute.Publish) },
+                onNavigateToMatches = { navController.navigate(MainRoute.Matches) }
             )
         }
 
@@ -108,6 +109,14 @@ fun AppNavHost(
                 viewModel = viewModel,
                 onSaveSuccess = {
                     navController.popBackStack()
+                }
+            )
+        }
+
+        composable<MainRoute.Matches> {
+            com.autistasgourmet.pethub.ui.features.matches.MatchesScreen(
+                onNavigateToProfile = { userId ->
+                    // Navegación futura al perfil del usuario
                 }
             )
         }
