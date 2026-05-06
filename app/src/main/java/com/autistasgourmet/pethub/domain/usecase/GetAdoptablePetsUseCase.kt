@@ -55,7 +55,7 @@ class GetAdoptablePetsUseCase @Inject constructor(
                     var score = 0
                     profile?.let { p ->
                         // la ciudad (+10)
-                        if (pet.city.equals(p.city, ignoreCase = true)) score += 10
+                        if (pet.municipality == p.municipality) score += 10
                         
                         // el tamaño vs vivienda (+5)
                         if (p.housingType == HousingType.APARTAMENTO && pet.size == PetSize.CHICO) score += 5

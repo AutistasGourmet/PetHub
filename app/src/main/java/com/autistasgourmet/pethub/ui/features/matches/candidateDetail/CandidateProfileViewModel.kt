@@ -76,7 +76,7 @@ class CandidateProfileViewModel @Inject constructor(
                     userName = "${profile.name} ${profile.lastName}",
                     occupation = profile.occupation,
                     age = "${profile.age} años",
-                    location = "${profile.city}, Zac.",
+                    location = "${profile.municipality.displayName}, Zac.",
                     interestedInPetName = petName,
                     housingType = profile.housingType.displayName,
                     patioDetails = if (profile.hasPatio) "Tiene patio/jardín" else "Sin patio / Terraza / Jardín",

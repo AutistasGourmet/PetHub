@@ -143,7 +143,7 @@ fun PetDetailContent(
                 Row(modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp), verticalAlignment = Alignment.CenterVertically) {
                     Icon(imageVector = Icons.Default.LocationOn, contentDescription = null, modifier = Modifier.size(16.dp))
                     Spacer(modifier = Modifier.width(4.dp))
-                    Text(text = "${pet.city}, Zac.", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Medium)
+                    Text(text = "${pet.municipality.displayName}, Zac.", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Medium)
                 }
             }
 

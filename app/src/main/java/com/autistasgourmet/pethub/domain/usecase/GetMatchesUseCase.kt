@@ -59,7 +59,7 @@ class GetMatchesUseCase @Inject constructor(
                                     userId = userId,
                                     fullName = "${profile.name} ${profile.lastName}",
                                     interestedInPetName = pet.name,
-                                    location = "${profile.city}, Zac.",
+                                    location = "${profile.municipality.displayName}, Zac.",
                                     description = "${profile.housingType.displayName}, ${profile.petExperience.displayName}"
                                 )
                             } else {

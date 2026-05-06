@@ -66,7 +66,7 @@ fun AdoptPetCard(
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
-                            text = "${pet.city}, Zac.",
+                            text = "${pet.municipality.displayName}, Zac.",
                             color = Color.White,
                             style = MaterialTheme.typography.bodySmall,
                             maxLines = 1,
@@ -180,8 +180,7 @@ fun AdoptPetCardPreview() {
                     isSterilized = true,
                     isDewormed = true,
                     specialConditions = "",
-                    postalCode = "98000",
-                    city = "Zacatecas"
+                    municipality = ZacatecasMunicipality.ZACATECAS
                 )
             )
         }

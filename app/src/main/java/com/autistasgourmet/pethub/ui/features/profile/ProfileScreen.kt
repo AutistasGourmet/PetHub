@@ -153,7 +153,7 @@ fun AdopterProfilePreviewCard(profile: AdopterProfile) {
             ProfilePreviewItem(
                 title = "UBICACIÓN",
                 content = listOf(
-                    profile.city.ifBlank { "Ciudad no especificada" },
+                    profile.municipality.displayName,
                     "Zacatecas"
                 )
             )
