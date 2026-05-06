@@ -20,6 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.autistasgourmet.pethub.domain.model.AdopterExperience
 import com.autistasgourmet.pethub.domain.model.HousingType
+import com.autistasgourmet.pethub.domain.model.ZacatecasMunicipality
 import com.autistasgourmet.pethub.ui.components.AppCheckBox
 import com.autistasgourmet.pethub.ui.components.AppDropdown
 import com.autistasgourmet.pethub.ui.components.AppHighlightedText
@@ -92,9 +93,9 @@ fun CompleteAdopterProfileScreen(
         )
 
         LocationSection(
-            postalCode = viewModel.postalCode,
-            postalCodeError = viewModel.postalCodeError,
-            onPostalCodeChange = viewModel::onPostalCodeChange
+            municipality = viewModel.municipality,
+            municipalityError = viewModel.municipalityError,
+            onMunicipalityChange = viewModel::onMunicipalityChange
         )
 
         AppPrimaryButton(
@@ -304,9 +305,9 @@ fun CareCommitmentsSection(
 
 @Composable
 fun LocationSection(
-    postalCode: String,
-    postalCodeError: String?,
-    onPostalCodeChange: (String) -> Unit
+    municipality: ZacatecasMunicipality,
+    municipalityError: String?,
+    onMunicipalityChange: (ZacatecasMunicipality) -> Unit
 ) {
     AppSectionText(
         modifier = Modifier.padding(16.dp),
@@ -315,16 +316,20 @@ fun LocationSection(
         content = {
             Spacer(modifier = Modifier.height(16.dp))
             AppHighlightedText(
-                normalText = "¿Dónde te encuentras? Ingresa el ",
-                highlightedText = "Código Postal."
+                normalText = "¿Dónde te encuentras? Selecciona tu ",
+                highlightedText = "Municipio."
             )
-            AppNumberField(
-                value = postalCode,
-                onValueChange = onPostalCodeChange,
-                label = "Código Postal",
-                placeholder = "Ej. 98064",
-                isError = postalCodeError != null,
-                errorMessage = postalCodeError
+            AppDropdown(
+                label = "Municipio",
+                options = ZacatecasMunicipality.entries.map { it.displayName }.sorted(),
+                selectedOption = municipality.displayName,
+                onOptionSelected = { selectedDisplayName ->
+                    val selectedEnum = ZacatecasMunicipality.entries.first { it.displayName == selectedDisplayName }
+                    onMunicipalityChange(selectedEnum)
+                },
+                placeholder = "Selecciona tu municipio",
+                isError = municipalityError != null,
+                errorMessage = municipalityError
             )
         }
     )

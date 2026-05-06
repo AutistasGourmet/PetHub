@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.autistasgourmet.pethub.domain.model.AdopterExperience
 import com.autistasgourmet.pethub.domain.model.AdopterProfile
 import com.autistasgourmet.pethub.domain.model.HousingType
+import com.autistasgourmet.pethub.domain.model.ZacatecasMunicipality
 import com.autistasgourmet.pethub.domain.repository.AuthRepository
 import com.autistasgourmet.pethub.domain.usecase.AdopterProfileError
 import com.autistasgourmet.pethub.domain.usecase.CompleteAdopterProfileUseCase
@@ -38,7 +39,7 @@ class CompleteAdopterProfileViewModel @Inject constructor(
         private set
     var occupation by mutableStateOf("")
         private set
-    var postalCode by mutableStateOf("")
+    var municipality by mutableStateOf(ZacatecasMunicipality.ZACATECAS)
         private set
     var housingType by mutableStateOf(HousingType.CASA)
         private set
@@ -81,7 +82,7 @@ class CompleteAdopterProfileViewModel @Inject constructor(
         private set
     var occupationError by mutableStateOf<String?>(null)
         private set
-    var postalCodeError by mutableStateOf<String?>(null)
+    var municipalityError by mutableStateOf<String?>(null)
         private set
     var spaceDetailsError by mutableStateOf<String?>(null)
         private set
@@ -103,7 +104,7 @@ class CompleteAdopterProfileViewModel @Inject constructor(
                     lastName = profile.lastName
                     age = profile.age.toString()
                     occupation = profile.occupation
-                    postalCode = profile.postalCode
+                    municipality = profile.municipality
                     housingType = profile.housingType
                     hasPatio = profile.hasPatio
                     spaceRoutineDetails = profile.spaceRoutineDetails
@@ -128,11 +129,9 @@ class CompleteAdopterProfileViewModel @Inject constructor(
     fun onLastNameChange(value: String) { lastName = value; lastNameError = null }
     fun onAgeChange(value: String) { age = value; ageError = null }
     fun onOccupationChange(value: String) { occupation = value; occupationError = null }
-    fun onPostalCodeChange(value: String) {
-        if (value.length <= 5) {
-            postalCode = value
-            postalCodeError = null
-        }
+    fun onMunicipalityChange(value: ZacatecasMunicipality) {
+        municipality = value
+        municipalityError = null
     }
     fun onHousingTypeChange(value: HousingType) { housingType = value }
     fun onHasPatioChange(value: Boolean) { hasPatio = value }
@@ -169,8 +168,7 @@ class CompleteAdopterProfileViewModel @Inject constructor(
                 lastName = lastName,
                 age = ageInt,
                 occupation = occupation,
-                postalCode = postalCode,
-                city = "",
+                municipality = municipality,
                 housingType = housingType,
                 hasPatio = hasPatio,
                 spaceRoutineDetails = spaceRoutineDetails,
@@ -200,7 +198,7 @@ class CompleteAdopterProfileViewModel @Inject constructor(
         lastNameError = null
         ageError = null
         occupationError = null
-        postalCodeError = null
+        municipalityError = null
         spaceDetailsError = null
     }
 
@@ -213,7 +211,6 @@ class CompleteAdopterProfileViewModel @Inject constructor(
                         is AdopterProfileError.EmptyLastName -> lastNameError = "El apellido es obligatorio"
                         is AdopterProfileError.InvalidAge -> ageError = "Ingresa una edad válida"
                         is AdopterProfileError.EmptyOccupation -> occupationError = "La ocupación es obligatoria"
-                        is AdopterProfileError.InvalidPostalCode -> postalCodeError = "Código postal no válido para Zacatecas"
                         is AdopterProfileError.EmptySpaceDetails -> spaceDetailsError = "Detalla el espacio y rutina"
                         else -> {}
                     }

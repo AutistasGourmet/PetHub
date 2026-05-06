@@ -36,7 +36,7 @@ class RegisterPetViewModel @Inject constructor(
         private set
     var description by mutableStateOf("")
         private set
-    var postalCode by mutableStateOf("")
+    var municipality by mutableStateOf<ZacatecasMunicipality?>(null)
         private set
     var species by mutableStateOf(PetSpecies.PERRO)
         private set
@@ -81,7 +81,7 @@ class RegisterPetViewModel @Inject constructor(
         private set
     var descriptionError by mutableStateOf<String?>(null)
         private set
-    var postalCodeError by mutableStateOf<String?>(null)
+    var municipalityError by mutableStateOf<String?>(null)
         private set
 
     private val _saveSuccess = MutableSharedFlow<Boolean>()
@@ -91,11 +91,9 @@ class RegisterPetViewModel @Inject constructor(
     fun onNameChange(newValue: String) { name = newValue; nameError = null }
     fun onDescriptionChange(newValue: String) { description = newValue; descriptionError = null }
 
-    fun onPostalCodeChange(newValue: String) {
-        if (newValue.length <= 5) {
-            postalCode = newValue
-            postalCodeError = null
-        }
+    fun onMunicipalityChange(newMunicipality: ZacatecasMunicipality) {
+        municipality = newMunicipality
+        municipalityError = null
     }
     fun onSpecialConditionsChange(newValue: String) { specialConditions = newValue }
 
@@ -171,8 +169,7 @@ class RegisterPetViewModel @Inject constructor(
                     isSterilized = isSterilized,
                     isDewormed = isDewormed,
                     specialConditions = specialConditions,
-                    postalCode = postalCode,
-                    city = ""
+                    municipality = municipality ?: ZacatecasMunicipality.ZACATECAS
                 )
 
                 savePetUseCase(pet).onSuccess {
@@ -191,7 +188,7 @@ class RegisterPetViewModel @Inject constructor(
     private fun resetErrors() {
         nameError = null
         descriptionError = null
-        postalCodeError = null
+        municipalityError = null
     }
 
     private suspend fun handleError(e: Throwable) {
@@ -202,7 +199,7 @@ class RegisterPetViewModel @Inject constructor(
                         is SavePetError.EmptyName -> nameError = "El nombre es obligatorio"
                         is SavePetError.EmptyDescription -> descriptionError = "Añade una descripción"
                         is SavePetError.NoPhotos -> SnackbarManager.showMessage("Debes subir al menos una foto")
-                        is SavePetError.InvalidPostalCode -> postalCodeError = "Código postal no válido para Zacatecas"
+                        is SavePetError.EmptyMunicipality -> municipalityError = "Selecciona un municipio"
                         else -> {}
                     }
                 }

@@ -111,9 +111,9 @@ fun RegisterPetScreen(
         )
 
         LocationSection(
-            postalCode = viewModel.postalCode,
-            postalCodeError = viewModel.postalCodeError,
-            onPostalCodeChange = viewModel::onPostalCodeChange
+            municipality = viewModel.municipality,
+            municipalityError = viewModel.municipalityError,
+            onMunicipalityChange = viewModel::onMunicipalityChange
         )
 
         AppPrimaryButton(
@@ -349,9 +349,9 @@ fun TraitsSection(
 
 @Composable
 fun LocationSection(
-    postalCode: String,
-    postalCodeError: String?,
-    onPostalCodeChange: (String) -> Unit
+    municipality: ZacatecasMunicipality?,
+    municipalityError: String?,
+    onMunicipalityChange: (ZacatecasMunicipality) -> Unit
 ) {
     AppSectionText(
         modifier = Modifier.padding(16.dp),
@@ -360,16 +360,20 @@ fun LocationSection(
         content = {
             Spacer(modifier = Modifier.height(16.dp))
             AppHighlightedText(
-                normalText = "¿Dónde se encuentra la mascota? Ingresa el ",
-                highlightedText = "Código Postal."
+                normalText = "¿Dónde se encuentra la mascota? Selecciona el ",
+                highlightedText = "Municipio."
             )
-            AppNumberField(
-                value = postalCode,
-                onValueChange = onPostalCodeChange,
-                label = "Código Postal",
-                placeholder = "Ej. 06000",
-                isError = postalCodeError != null,
-                errorMessage = postalCodeError
+            AppDropdown(
+                label = "Municipio",
+                options = ZacatecasMunicipality.entries.map { it.displayName }.sorted(),
+                selectedOption = municipality?.displayName ?: "",
+                onOptionSelected = { selectedDisplayName ->
+                    val selectedEnum = ZacatecasMunicipality.entries.first { it.displayName == selectedDisplayName }
+                    onMunicipalityChange(selectedEnum)
+                },
+                placeholder = "Selecciona un municipio",
+                isError = municipalityError != null,
+                errorMessage = municipalityError
             )
         }
     )
