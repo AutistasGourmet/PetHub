@@ -4,12 +4,10 @@ import android.content.Context
 import com.autistasgourmet.pethub.data.repository.AdopterProfileRepositoryImpl
 import com.autistasgourmet.pethub.data.repository.AuthRepositoryImpl
 import com.autistasgourmet.pethub.data.repository.PetRepositoryImpl
-import com.autistasgourmet.pethub.data.repository.PostalCodeRepositoryImpl
 import com.autistasgourmet.pethub.data.repository.StorageRepositoryImpl
 import com.autistasgourmet.pethub.domain.repository.AdopterProfileRepository
 import com.autistasgourmet.pethub.domain.repository.AuthRepository
 import com.autistasgourmet.pethub.domain.repository.PetRepository
-import com.autistasgourmet.pethub.domain.repository.PostalCodeRepository
 import com.autistasgourmet.pethub.domain.repository.StorageRepository
 import com.autistasgourmet.pethub.domain.usecase.CompleteAdopterProfileUseCase
 import com.autistasgourmet.pethub.domain.usecase.ExpressInterestUseCase
@@ -68,12 +66,6 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun providePostalCodeRepository(@ApplicationContext context: Context): PostalCodeRepository {
-        return PostalCodeRepositoryImpl(context)
-    }
-
-    @Provides
-    @Singleton
     fun provideStorageRepository(storage: FirebaseStorage): StorageRepository {
         return StorageRepositoryImpl(storage)
     }
@@ -95,19 +87,17 @@ object AppModule {
     @Provides
     @Singleton
     fun provideSavePetUseCase(
-        repository: PetRepository,
-        postalCodeRepository: PostalCodeRepository
+        repository: PetRepository
     ): SavePetUseCase {
-        return SavePetUseCase(repository, postalCodeRepository)
+        return SavePetUseCase(repository)
     }
 
     @Provides
     @Singleton
     fun provideCompleteAdopterProfileUseCase(
-        repository: AdopterProfileRepository,
-        postalCodeRepository: PostalCodeRepository
+        repository: AdopterProfileRepository
     ): CompleteAdopterProfileUseCase {
-        return CompleteAdopterProfileUseCase(repository, postalCodeRepository)
+        return CompleteAdopterProfileUseCase(repository)
     }
 
     @Provides
