@@ -8,8 +8,7 @@ data class AdopterProfileDto(
     val lastName: String = "",
     val age: Int = 0,
     val occupation: String = "",
-    val postalCode: String = "",
-    val city: String = "",
+    val municipality: String = "",
     val housingType: String = "",
     @get:PropertyName("hasPatio")
     @set:PropertyName("hasPatio")

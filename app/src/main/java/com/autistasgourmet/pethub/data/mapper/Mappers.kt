@@ -44,8 +44,7 @@ fun PetDto.toDomain(): Pet = Pet(
     isSterilized = isSterilized,
     isDewormed = isDewormed,
     specialConditions = specialConditions,
-    postalCode = postalCode,
-    city = city
+    municipality = enumValueOf(municipality)
 )
 
 fun Pet.toDto(): PetDto = PetDto(
@@ -67,8 +66,7 @@ fun Pet.toDto(): PetDto = PetDto(
     isSterilized = isSterilized,
     isDewormed = isDewormed,
     specialConditions = specialConditions,
-    postalCode = postalCode,
-    city = city
+    municipality = municipality.name
 )
 
 
@@ -80,8 +78,7 @@ fun AdopterProfileDto.toDomain(): AdopterProfile = AdopterProfile(
     lastName = lastName,
     age = age,
     occupation = occupation,
-    postalCode = postalCode,
-    city = city,
+    municipality = enumValueOf(municipality),
     housingType = enumValueOf(housingType),
     hasPatio = hasPatio,
     spaceRoutineDetails = spaceRoutineDetails,
@@ -103,8 +100,7 @@ fun AdopterProfile.toDto(): AdopterProfileDto = AdopterProfileDto(
     lastName = lastName,
     age = age,
     occupation = occupation,
-    postalCode = postalCode,
-    city = city,
+    municipality = municipality.name,
     housingType = housingType.name,
     hasPatio = hasPatio,
     spaceRoutineDetails = spaceRoutineDetails,

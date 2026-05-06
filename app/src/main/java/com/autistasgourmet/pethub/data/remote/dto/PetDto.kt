@@ -27,6 +27,5 @@ data class PetDto(
     @set:PropertyName("dewormed")
     var isDewormed: Boolean = false,
     val specialConditions: String = "",
-    val postalCode: String = "",
-    val city: String = ""
+    val municipality: String = ""
 )
