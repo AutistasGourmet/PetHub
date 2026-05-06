@@ -19,6 +19,5 @@ data class Pet(
     val isSterilized: Boolean,
     val isDewormed: Boolean,
     val specialConditions: String,
-    val postalCode: String,
-    val city: String
+    val municipality: ZacatecasMunicipality
 )
